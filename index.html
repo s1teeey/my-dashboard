@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>我的工作台</title>
+<meta name="theme-color" content="#5b4bf0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="工作台">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap">
+<style>
+/* 電腦：左側選單 + 內容區的工作台。手機：霧面玻璃卡片 + 底部浮動選單。 */
+:root{
+  --ink:#161a2b; --mute:#687089; --accent:#5b4bf0; --accent2:#8f6bff; --danger:#d8433b; --ok:#1f9d61;
+  --on:#161a2b; --on-mute:#687089; --line:rgba(22,26,43,.1);
+  --glass:rgba(255,255,255,.74); --glass-b:rgba(255,255,255,.95); --field:rgba(22,26,43,.05);
+  --r:20px; --dur:.18s;
+  --f:"Plus Jakarta Sans","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font:15px/1.6 var(--f);color:var(--on);-webkit-font-smoothing:antialiased;
+  background:radial-gradient(900px 600px at 8% 0%,#ddd6ff 0,transparent 60%),radial-gradient(800px 560px at 95% 8%,#cdeaff 0,transparent 60%),radial-gradient(900px 600px at 70% 105%,#ffe0d0 0,transparent 60%),#eef0f8;background-attachment:fixed}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3,p{margin:0}
+
+.app{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100%}
+.glass{background:var(--glass);border:1px solid var(--glass-b);border-radius:var(--r);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 10px 40px rgba(40,50,90,.08)}
+.solid{background:#fff;color:var(--ink);border-radius:16px;box-shadow:0 2px 10px rgba(40,50,90,.07)}
+
+/* ---- sidebar ---- */
+.side{position:sticky;top:0;height:100vh;height:100dvh;padding:18px 14px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;border-right:1px solid var(--line);background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 10px 16px;font-weight:800;font-size:17px}
+.brand img{width:34px;height:34px;border-radius:10px}
+.nav{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 12px;border:0;border-radius:12px;background:none;font-weight:600;color:var(--mute);transition:background var(--dur),color var(--dur)}
+.nav:hover{background:rgba(22,26,43,.06);color:var(--ink)}
+.nav[aria-current=page]{background:#fff;color:var(--ink);box-shadow:0 2px 10px rgba(40,50,90,.08)}
+.nav .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.nav span.nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav small{font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+.side h2{font-size:11.5px;letter-spacing:.1em;color:var(--mute);padding:16px 12px 6px;font-weight:700}
+.side .sp{flex:1}
+.sync{font-size:12px;color:var(--mute);padding:8px 12px;display:flex;gap:8px;align-items:center}
+.sync i{width:8px;height:8px;border-radius:50%;background:#b6bccd;flex:none}
+.sync.ok i{background:var(--ok)} .sync.bad i{background:var(--danger)} .sync.busy i{background:#e0a21a;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+
+/* ---- main ---- */
+main{padding:28px clamp(16px,3vw,40px) 60px;display:flex;flex-direction:column;gap:22px;min-width:0;max-width:1320px;width:100%}
+.top{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;justify-content:space-between}
+.top h1{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.top p{color:var(--on-mute)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:10px 16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 6px 18px rgba(91,75,240,.3);transition:transform var(--dur),filter var(--dur),box-shadow var(--dur);white-space:nowrap}
+.btn:hover{filter:brightness(1.08);box-shadow:0 8px 22px rgba(91,75,240,.38)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--field);color:var(--on);box-shadow:none}
+.btn.ghost:hover{background:rgba(22,26,43,.1);filter:none}
+.btn.danger{background:var(--danger);box-shadow:none}
+.btn.sm{padding:6px 12px;font-size:13px;border-radius:10px}
+.ib{width:38px;height:38px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--field);color:var(--on);transition:background var(--dur)}
+.ib:hover{background:rgba(22,26,43,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{padding:12px 18px;display:flex;flex-direction:column;min-width:120px}
+.chip b{font-size:26px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.chip span{font-size:12.5px;color:var(--on-mute);font-weight:600}
+.banner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:14px;background:rgba(91,75,240,.1);border:1px solid rgba(91,75,240,.25);font-size:14px}
+.panel{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.panel>h2{font-size:16px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel>h2 small{font-size:12.5px;font-weight:600;color:var(--on-mute)}
+
+/* ---- progress lanes（沒有日期的甘特圖：每段是一個階段，長度＝待辦數，填滿＝完成比例） ---- */
+.lane{display:grid;grid-template-columns:210px minmax(0,1fr) 58px;gap:16px;align-items:center;padding:12px;border-radius:16px;border:0;background:none;width:100%;text-align:left;transition:background var(--dur),transform var(--dur)}
+.lane:hover{background:rgba(255,255,255,.7);transform:translateX(3px)}
+.lane .who{display:flex;gap:12px;align-items:center;min-width:0}
+.emo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;flex:none;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 6px 14px color-mix(in srgb,var(--c1) 35%,transparent)}
+.who b{display:block;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who small{display:block;color:var(--on-mute);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pct{font-size:19px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.track{display:flex;gap:5px;min-width:0}
+.seg{min-width:0;display:flex;flex-direction:column;gap:5px}
+.seg .sn{font-size:11.5px;font-weight:700;color:var(--on-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seg.cur .sn{color:var(--on)}
+.seg i{display:block;height:12px;border-radius:999px;background:color-mix(in srgb,var(--c1) 16%,rgba(255,255,255,.6));overflow:hidden;position:relative}
+.seg i b{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--c1),var(--c2));transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.seg.cur i{box-shadow:0 0 0 2px color-mix(in srgb,var(--c1) 40%,transparent)}
+.track.big .seg i{height:18px}
+.track.big .seg .sn{font-size:13px}
+.seg .sc{font-size:11px;color:var(--on-mute);font-variant-numeric:tabular-nums}
+.track:not(.big) .sc{display:none}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+.next{display:flex;gap:12px;align-items:center;padding:11px 14px}
+.next .t{flex:1;min-width:0}
+.next .t b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.next .t small{color:var(--mute);font-size:12.5px}
+.ck{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:7px;border:2px solid color-mix(in srgb,var(--c1,var(--accent)) 55%,#c8cce0);margin:0;flex:none;cursor:pointer;display:grid;place-items:center;transition:background var(--dur),border-color var(--dur),transform var(--dur);background:#fff}
+.ck:hover{border-color:var(--c1,var(--accent))}
+.ck:active{transform:scale(.88)}
+.ck:checked{background:var(--c1,var(--accent));border-color:var(--c1,var(--accent))}
+.ck:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translateY(-1px)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{position:relative;display:flex;gap:10px;align-items:center;padding:11px 12px;text-decoration:none;color:var(--ink);transition:transform var(--dur),box-shadow var(--dur)}
+.tile:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(40,50,90,.14)}
+.av{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:800;color:#fff;flex:none;font-size:15px}
+.tile .tt{min-width:0}
+.tile b{display:block;font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile small{display:block;font-size:11.5px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile .x{position:absolute;top:-6px;right:-6px;opacity:0}
+.tile:hover .x,.tile .x:focus-visible{opacity:1}
+.x{width:22px;height:22px;border-radius:50%;border:0;background:#fff;color:var(--mute);box-shadow:0 2px 8px rgba(0,0,0,.18);display:grid;place-items:center;font-size:12px;line-height:1;transition:opacity var(--dur),color var(--dur)}
+.x:hover{color:var(--danger)}
+
+/* ---- project page ---- */
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:26px 28px;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;box-shadow:0 18px 44px color-mix(in srgb,var(--c1) 38%,transparent)}
+.hero::before{content:"";position:absolute;width:340px;height:340px;right:-90px;top:-150px;border-radius:50%;background:rgba(255,255,255,.16)}
+.hero::after{content:"";position:absolute;width:200px;height:200px;right:120px;bottom:-130px;border-radius:50%;background:rgba(255,255,255,.1)}
+.hero>*{position:relative;z-index:1}
+.hero .big{font-size:44px;line-height:1}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin-top:10px}
+.hero p{opacity:.92;max-width:60ch}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pill{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);font-size:13px;font-weight:700;color:#fff;text-decoration:none;transition:background var(--dur)}
+button.pill:hover,a.pill:hover{background:rgba(255,255,255,.36)}
+.ring{position:relative;width:118px;height:118px}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.ring .bg{stroke:rgba(255,255,255,.26)} .ring .fg{stroke:#fff;transition:stroke-dashoffset .5s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.board{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity}
+.col{flex:0 0 290px;padding:14px;display:flex;flex-direction:column;gap:9px;scroll-snap-align:start}
+.col.cur{box-shadow:0 0 0 2px color-mix(in srgb,var(--c1) 55%,transparent),0 10px 30px rgba(40,50,90,.1)}
+.col header{display:flex;gap:8px;align-items:center}
+.inl{flex:1;min-width:0;border:0;background:none;padding:4px 6px;border-radius:8px;transition:background var(--dur)}
+.inl:hover{background:var(--field)}
+.inl:focus{outline:0;background:#fff;box-shadow:0 0 0 2px var(--c1,var(--accent));color:var(--ink)}
+.col header .inl{font-weight:800;font-size:15px}
+.cnt{font-size:12px;font-weight:700;color:var(--on-mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:var(--c1);color:#fff;white-space:nowrap}
+.todo{display:flex;gap:8px;align-items:center;padding:8px 8px 8px 10px;position:relative}
+.todo .inl{font-size:14px}
+.todo.done .inl{color:var(--mute);text-decoration:line-through}
+.todo .x{position:static;box-shadow:none;background:none;opacity:0;flex:none}
+.todo:hover .x,.todo .x:focus-visible{opacity:1}
+.add{border:1.5px dashed color-mix(in srgb,var(--on) 28%,transparent);background:none;border-radius:12px;padding:9px 12px;width:100%;transition:border-color var(--dur),background var(--dur)}
+.add::placeholder{color:var(--on-mute)}
+.add:focus{outline:0;border-style:solid;border-color:var(--c1,var(--accent));background:#fff;color:var(--ink)}
+.newcol{flex:0 0 200px;border:1.5px dashed color-mix(in srgb,var(--on) 28%,transparent);background:none;border-radius:var(--r);padding:18px;font-weight:700;color:var(--on-mute);transition:background var(--dur),color var(--dur)}
+.newcol:hover{background:var(--glass);color:var(--on)}
+.empty{text-align:center;padding:26px 12px;color:var(--on-mute);display:flex;flex-direction:column;gap:8px;align-items:center}
+.empty .e{font-size:34px}
+textarea.note{width:100%;min-height:120px;border:0;border-radius:14px;padding:14px;background:#fff;color:var(--ink);resize:vertical;line-height:1.7}
+textarea.note:focus{outline:0;box-shadow:0 0 0 2px var(--c1,var(--accent))}
+
+/* ---- forms / modal / toast ---- */
+.fld{display:flex;flex-direction:column;gap:6px}
+.fld label,.lab{font-size:13px;font-weight:700}
+.in{border:1.5px solid rgba(22,26,43,.14);border-radius:12px;padding:10px 12px;background:#fff;color:var(--ink);width:100%;transition:border-color var(--dur),box-shadow var(--dur)}
+.in:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,75,240,.2)}
+.fld.err .in{border-color:var(--danger)} .fld .msg{font-size:12.5px;color:var(--mute)} .fld.err .msg{color:var(--danger)}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick label{cursor:pointer}
+.pick input{position:absolute;opacity:0;pointer-events:none}
+.pick span{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-size:19px;background:rgba(22,26,43,.06);border:2px solid transparent;transition:transform var(--dur),border-color var(--dur)}
+.pick span.c{background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:50%}
+.pick span.w{width:auto;padding:0 14px;font-size:13.5px;font-weight:700}
+.pick input:checked+span{border-color:var(--ink);transform:scale(1.08)}
+.pick input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.ovl{position:fixed;inset:0;z-index:50;background:rgba(14,18,34,.45);display:grid;place-items:center;padding:16px;animation:fade var(--dur)}
+.modal{width:min(480px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;background:#fff;color:var(--ink);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 80px rgba(0,0,0,.3);animation:pop .22s cubic-bezier(.2,.9,.3,1.2)}
+.modal h2{font-size:20px;font-weight:800}
+.modal .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.modal .btn.ghost{background:rgba(22,26,43,.06);color:var(--ink)}
+@keyframes fade{from{opacity:0}} @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.96)}}
+.toasts{position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;align-items:center;width:max-content;max-width:calc(100% - 32px)}
+.toast{display:flex;gap:14px;align-items:center;background:#161a2b;color:#fff;padding:11px 16px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.3);font-weight:600;font-size:14px;animation:pop .22s}
+.toast.bad{background:var(--danger)}
+.toast button{border:0;background:none;color:#b9b0ff;font-weight:800;padding:0}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+pre.code{margin:0;background:#161a2b;color:#dfe3f5;border-radius:14px;padding:14px;font:12px/1.55 ui-monospace,Menlo,monospace;overflow:auto;max-height:220px;white-space:pre}
+.dock,.mback{display:none}
+
+/* ---- 手機：霧面玻璃 ---- */
+@media (max-width:820px){
+  :root{--on:#fff;--on-mute:rgba(255,255,255,.8);--line:rgba(255,255,255,.2);--glass:rgba(255,255,255,.15);--glass-b:rgba(255,255,255,.3);--field:rgba(255,255,255,.18)}
+  body{background:radial-gradient(520px 380px at 85% -5%,rgba(255,214,190,.55) 0,transparent 65%),linear-gradient(170deg,#7d95b2 0%,#526a89 34%,#35465f 68%,#222d42 100%);background-attachment:fixed}
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:none}
+  main{padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(110px + env(safe-area-inset-bottom,0px));gap:18px}
+  .glass{box-shadow:0 12px 34px rgba(10,16,30,.22)}
+  .top h1{font-size:38px;font-style:italic;font-weight:800;line-height:1.08;letter-spacing:-.03em}
+  .top .btn{display:none}
+  .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .chip{min-width:0;padding:12px}
+  .chip b{font-size:22px}
+  .lane{grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:14px;background:#fff;color:var(--ink);box-shadow:0 8px 22px rgba(10,16,30,.18);--on:#161a2b;--on-mute:#687089}
+  .lane:hover{background:#fff;transform:none}
+  .lane .track{grid-column:1/-1;grid-row:2}
+  .panel{padding:16px;gap:12px}
+  .cols{grid-template-columns:minmax(0,1fr)}
+  .hero{grid-template-columns:minmax(0,1fr);padding:22px;border-radius:28px}
+  .hero h1{font-size:32px;font-style:italic}
+  .ring{width:92px;height:92px;position:absolute;right:18px;top:18px}
+  .ring b{font-size:20px}
+  .board{margin-inline:-16px;padding-inline:16px;scroll-snap-type:x mandatory}
+  .col{flex-basis:84vw}
+  .col.glass{background:rgba(255,255,255,.2)}
+  .inl:hover{background:none}
+  .todo .x,.tile .x{opacity:1}
+  .btn.ghost:hover,.ib:hover{background:rgba(255,255,255,.3)}
+  .banner{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35)}
+  .mback{display:flex;justify-content:space-between;align-items:center}
+  .mback .ib{width:44px;height:44px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--glass-b);font-size:18px}
+  .mback b{font-style:italic;font-weight:800;font-size:17px}
+  .dock{display:flex;position:fixed;z-index:40;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));gap:6px;padding:7px;border-radius:999px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.36);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);box-shadow:0 14px 34px rgba(8,12,24,.35)}
+  .dock button{width:52px;height:52px;border-radius:50%;border:0;background:none;color:#fff;font-size:21px;display:grid;place-items:center;transition:background var(--dur),color var(--dur),transform var(--dur)}
+  .dock button:active{transform:scale(.9)}
+  .dock button[aria-current=page]{background:#fff;color:#27354e}
+  .settings .in,.settings pre{font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="主選單"></aside>
+  <main id="main"></main>
+</div>
+<nav class="dock" id="dock" aria-label="主選單"></nav>
+<div id="modal"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const LS='dash-v1',LSC='dash-sync';
+const COLORS=[['#6c5ce7','#a66bff'],['#0e9f98','#3fd6a8'],['#ee5f38','#ffab4a'],['#e2457b','#ff8fa6'],['#2f7df6','#5cc4ff'],['#c08a0a','#f2c93f'],['#4b5d78','#8aa0bd'],['#3a9a50','#96d44a']];
+const EMOJI=['🚀','🎓','🎨','📚','🛠️','🌱','💡','📱','✍️','🏠','🎵','💰'];
+const TEMPLATES={one:['待辦'],web:['構想','製作','上線'],learn:['入門','練習','做作品']};
+const T=(text,done)=>({id:uid(),text,done:!!done});
+
+function seed(){return {v:1,updatedAt:0,example:true,
+ projects:[
+  {id:uid(),name:'推甄分享網站',emoji:'🎓',color:0,desc:'台大商研、國企推甄資訊整理站',link:'https://s1teeey.github.io/NTU_MBA-IB_Application/',notes:'',stages:[
+    {id:uid(),name:'內容',todos:[T('簡章細則',1),T('師資陣容',1),T('書審撰寫',1),T('面試準備',1)]},
+    {id:uid(),name:'設計',todos:[T('用 Fonts 書籤試配色',1),T('決定最後的強調色'),T('字級整理成變數')]},
+    {id:uid(),name:'維護',todos:[T('補上新年度簡章'),T('收集學弟妹回饋')]}]},
+  {id:uid(),name:'個人工作台',emoji:'🚀',color:4,desc:'就是你現在看到的這個 PWA',link:'',notes:'',stages:[
+    {id:uid(),name:'構想',todos:[T('決定首頁要看到什麼',1),T('挑參考風格',1)]},
+    {id:uid(),name:'製作',todos:[T('專案進度條',1),T('收藏網站',1),T('接上雲端同步')]},
+    {id:uid(),name:'上線',todos:[T('放到 GitHub Pages'),T('手機加到主畫面')]}]},
+  {id:uid(),name:'學 UI/UX',emoji:'🎨',color:2,desc:'邊做專案邊學設計語言',link:'',notes:'',stages:[
+    {id:uid(),name:'入門',todos:[T('認識版面、元件、狀態的術語',1),T('建立靈感收藏')]},
+    {id:uid(),name:'練習',todos:[T('拆解三個喜歡的網站'),T('請 Claude 批改自己的作品')]}]}],
+ links:[
+  {id:uid(),title:'推甄分享',url:'https://s1teeey.github.io/NTU_MBA-IB_Application/',group:'我的網站'},
+  {id:uid(),title:'GitHub',url:'https://github.com/',group:'我的網站'},
+  {id:uid(),title:'Mobbin',url:'https://mobbin.com/',group:'設計靈感'},
+  {id:uid(),title:'Dribbble',url:'https://dribbble.com/',group:'設計靈感'},
+  {id:uid(),title:'shadcn/ui',url:'https://ui.shadcn.com/',group:'設計靈感'},
+  {id:uid(),title:'Google Fonts',url:'https://fonts.google.com/',group:'工具'}]}}
+
+let S;try{S=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
+if(!S||!S.projects) S=seed();
+let CFG={url:'',token:''};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem(LSC)||'{}'))}catch(e){}
+let syncState=CFG.url?'idle':'off',syncAt=0,syncTimer=null;
+
+function persist(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){toast('儲存失敗：瀏覽器空間不足或被封鎖','bad')}}
+function save(){S.updatedAt=Date.now();persist();if(CFG.url){clearTimeout(syncTimer);syncTimer=setTimeout(push,1500)}}
+
+/* ---- stats ---- */
+const pstat=p=>{let t=0,d=0;p.stages.forEach(s=>{t+=s.todos.length;d+=s.todos.filter(x=>x.done).length});return {t,d,pct:t?Math.round(d/t*100):0}};
+const curStage=p=>p.stages.find(s=>s.todos.some(x=>!x.done))||null;
+const nextTodo=p=>{const s=curStage(p);return s?{s,t:s.todos.find(x=>!x.done)}:null};
+const cvar=p=>{const c=COLORS[p.color%COLORS.length];return `--c1:${c[0]};--c2:${c[1]}`};
+const P=id=>S.projects.find(p=>p.id===id);
+const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}};
+const hue=s=>{let h=0;for(const ch of s)h=(h*31+ch.charCodeAt(0))%360;return h};
+
+function track(p,big){
+  if(!p.stages.length) return '<div class="cnt">還沒有階段</div>';
+  const cur=curStage(p);
+  return `<div class="track${big?' big':''}">${p.stages.map(s=>{const t=s.todos.length,d=s.todos.filter(x=>x.done).length;
+    return `<div class="seg${s===cur?' cur':''}" style="flex:${Math.max(1,t)}" title="${esc(s.name)} ${d}/${t}"><span class="sn">${esc(s.name)}</span><i><b style="width:${t?d/t*100:0}%"></b></i><span class="sc">${d}/${t} 完成</span></div>`}).join('')}</div>`}
+
+/* ---- routing ---- */
+const route=()=>{const h=location.hash.replace(/^#\/?/,'');const m=h.match(/^p\/(.+)$/);if(m&&P(m[1]))return {v:'project',id:m[1]};return {v:['links','settings'].includes(h)?h:'home'}};
+const go=h=>{location.hash='#/'+h};
+window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});
+
+/* ---- views ---- */
+function renderSide(){const r=route();
+  const cur=(v,id)=>r.v===v&&(id==null||r.id===id)?' aria-current="page"':'';
+  $('#side').innerHTML=`<div class="brand"><img src="icon-192.png" alt="">我的工作台</div>
+   <button class="nav" data-go=""${cur('home')}>🏠<span class="nm">總覽</span></button>
+   <button class="nav" data-go="links"${cur('links')}>🔖<span class="nm">收藏網站</span><small>${S.links.length}</small></button>
+   <h2>專案</h2>
+   ${S.projects.map(p=>`<button class="nav" data-go="p/${p.id}"${cur('project',p.id)}><i class="dot" style="background:${COLORS[p.color%COLORS.length][0]}"></i><span class="nm">${esc(p.emoji)} ${esc(p.name)}</span><small>${pstat(p).pct}%</small></button>`).join('')}
+   <button class="nav" data-act="newProject">＋<span class="nm">新增專案</span></button>
+   <div class="sp"></div>
+   <div class="sync ${({ok:'ok',bad:'bad',busy:'busy'})[syncState]||''}"><i></i><span>${syncLabel()}</span></div>
+   <button class="nav" data-go="settings"${cur('settings')}>⚙️<span class="nm">設定與同步</span></button>`;
+  $('#dock').innerHTML=`<button data-go=""${cur('home')} aria-label="總覽">🏠</button><button data-go="links"${cur('links')} aria-label="收藏網站">🔖</button><button data-act="newProject" aria-label="新增專案">＋</button><button data-go="settings"${cur('settings')} aria-label="設定">⚙️</button>`}
+function syncLabel(){return {off:'只存在這台裝置',idle:'已設定同步',busy:'同步中…',ok:'已同步 '+new Date(syncAt).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}),bad:'同步失敗，資料仍在本機'}[syncState]}
+
+function viewHome(){
+  const all=S.projects.map(pstat),t=all.reduce((a,x)=>a+x.t,0),d=all.reduce((a,x)=>a+x.d,0);
+  const today=new Date().toLocaleDateString('zh-TW',{month:'long',day:'numeric',weekday:'long'});
+  const nexts=S.projects.map(p=>({p,n:nextTodo(p)})).filter(x=>x.n);
+  return `<div class="top"><div><p>${today}</p><h1>我的專案</h1></div><button class="btn" data-act="newProject">＋ 新增專案</button></div>
+  ${S.example?`<div class="banner"><span>目前顯示的是<b>範例資料</b>，可以直接修改，或清空後從頭開始。</span><button class="btn sm ghost" data-act="clearExample">清空範例</button></div>`:''}
+  <div class="chips"><div class="chip glass"><b>${S.projects.length}</b><span>進行中的專案</span></div><div class="chip glass"><b>${t-d}</b><span>還沒做的事</span></div><div class="chip glass"><b>${d}</b><span>已完成</span></div></div>
+  <section class="panel glass"><h2>專案進度 <small>每一段是一個階段，越長代表事情越多</small></h2>
+   ${S.projects.length?S.projects.map(p=>{const st=pstat(p),n=nextTodo(p);return `<button class="lane" data-go="p/${p.id}" style="${cvar(p)}"><span class="who"><span class="emo">${esc(p.emoji)}</span><span style="min-width:0"><b>${esc(p.name)}</b><small>${n?'下一步：'+esc(n.t.text):st.t?'全部完成 🎉':'還沒有待辦'}</small></span></span>${track(p)}<span class="pct">${st.pct}%</span></button>`}).join('')
+    :`<div class="empty"><div class="e">🌱</div><b>還沒有專案</b><span>建立第一個專案，進度會顯示在這裡。</span><button class="btn" data-act="newProject">＋ 新增專案</button></div>`}
+  </section>
+  <div class="cols">
+   <section class="panel glass"><h2>下一步可以做</h2>
+    ${nexts.length?nexts.map(({p,n})=>`<div class="next solid" style="${cvar(p)}"><input type="checkbox" class="ck" data-act="toggle" data-p="${p.id}" data-s="${n.s.id}" data-t="${n.t.id}" aria-label="完成 ${esc(n.t.text)}"><div class="t"><b>${esc(n.t.text)}</b><small>${esc(p.emoji)} ${esc(p.name)} · ${esc(n.s.name)}</small></div></div>`).join('')
+     :`<div class="empty"><div class="e">☕</div><span>目前沒有待辦，可以休息一下。</span></div>`}
+   </section>
+   <section class="panel glass"><h2>收藏網站 <button class="btn sm ghost" data-go="links">全部</button></h2>
+    ${S.links.length?`<div class="tiles">${S.links.slice(0,6).map(tile).join('')}</div>`:`<div class="empty"><div class="e">🔖</div><span>還沒有收藏。</span><button class="btn sm" data-act="newLink">＋ 新增收藏</button></div>`}
+   </section>
+  </div>`}
+function tile(l){const hh=hue(l.title+l.url);return `<a class="tile solid" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av" style="background:linear-gradient(135deg,hsl(${hh} 68% 52%),hsl(${(hh+40)%360} 78% 62%))">${esc((l.title.trim()[0]||'?').toUpperCase())}</span><span class="tt"><b>${esc(l.title)}</b><small>${esc(host(l.url))}</small></span><button class="x" data-act="delLink" data-id="${l.id}" aria-label="刪除 ${esc(l.title)}">✕</button></a>`}
+
+function viewProject(p){const st=pstat(p),cur=curStage(p),C=2*Math.PI*49;
+  return `<div class="mback"><button class="ib" data-go="" aria-label="回總覽">‹</button><b>專案</b><button class="ib" data-act="editProject" data-p="${p.id}" aria-label="編輯專案">✎</button></div>
+  <section class="hero" style="${cvar(p)}"><div><div class="big">${esc(p.emoji)}</div><h1>${esc(p.name)}</h1>${p.desc?`<p>${esc(p.desc)}</p>`:''}
+    <div class="meta"><span class="pill">${st.d} / ${st.t} 完成</span>${cur?`<span class="pill">目前階段：${esc(cur.name)}</span>`:''}${p.link?`<a class="pill" href="${esc(p.link)}" target="_blank" rel="noopener">開啟網站 ↗</a>`:''}<button class="pill" data-act="editProject" data-p="${p.id}">編輯</button></div></div>
+    <div class="ring"><svg viewBox="0 0 118 118" width="100%" height="100%"><circle class="bg" cx="59" cy="59" r="49"/><circle class="fg" cx="59" cy="59" r="49" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-st.pct/100)}"/></svg><b>${st.pct}%</b></div></section>
+  <section class="panel glass" style="${cvar(p)}"><h2>進度</h2>${track(p,true)}</section>
+  <div class="board" style="${cvar(p)}">
+   ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col glass${s===cur?' cur':''}"><header><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="階段名稱">${s===cur?'<span class="tag">進行中</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" style="position:static;box-shadow:none;background:none;color:inherit" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="刪除階段 ${esc(s.name)}">✕</button></header>
+     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}"><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="完成"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="待辦內容"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="刪除 ${esc(t.text)}">✕</button></div>`).join('')}
+     <input class="add" placeholder="＋ 新增待辦，按 Enter" data-add="${s.id}" data-p="${p.id}" aria-label="在 ${esc(s.name)} 新增待辦"></section>`}).join('')}
+   <button class="newcol" data-act="addStage" data-p="${p.id}">＋ 新增階段</button></div>
+  <section class="panel glass" style="${cvar(p)}"><h2>筆記 <small>自動儲存</small></h2><textarea class="note" data-f="notes" data-p="${p.id}" placeholder="想法、連結、卡住的地方…都可以寫在這裡">${esc(p.notes||'')}</textarea></section>
+  <div><button class="btn ghost sm" data-act="delProject" data-p="${p.id}">刪除這個專案</button></div>`}
+
+function viewLinks(){const groups={};S.links.forEach(l=>(groups[l.group||'未分類']=groups[l.group||'未分類']||[]).push(l));
+  return `<div class="top"><div><p>常用的網站，一點就開</p><h1>收藏網站</h1></div><button class="btn" data-act="newLink">＋ 新增收藏</button></div>
+  ${S.links.length?Object.keys(groups).map(g=>`<section class="panel glass"><h2>${esc(g)} <small>${groups[g].length} 個</small></h2><div class="tiles">${groups[g].map(tile).join('')}</div></section>`).join('')
+   :`<section class="panel glass"><div class="empty"><div class="e">🔖</div><b>還沒有收藏</b><span>把常用的網站放進來，之後不用再翻書籤。</span><button class="btn" data-act="newLink">＋ 新增收藏</button></div></section>`}
+  <div><button class="btn ghost" data-act="newLink">＋ 新增收藏</button></div>`}
+
+function scriptCode(tok){return `const TOKEN = '${(tok||'在這裡填同步密碼').replace(/['\\\\]/g,'')}';
+const FILE = 'my-dashboard-data.json';
+
+function doPost(e) {
+  const out = o => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+  let b;
+  try { b = JSON.parse(e.postData.contents); } catch (err) { return out({ ok: false, error: 'bad request' }); }
+  if (b.token !== TOKEN) return out({ ok: false, error: 'unauthorized' });
+  const it = DriveApp.getFilesByName(FILE);
+  const f = it.hasNext() ? it.next() : null;
+  if (b.action === 'get') {
+    if (!f) return out({ ok: true, updatedAt: 0, data: null });
+    const j = JSON.parse(f.getBlob().getDataAsString());
+    return out({ ok: true, updatedAt: j.updatedAt || 0, data: j });
+  }
+  if (b.action === 'set') {
+    const lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      const txt = JSON.stringify(b.data);
+      if (f) f.setContent(txt); else DriveApp.createFile(FILE, txt, 'application/json');
+    } finally { lock.releaseLock(); }
+    return out({ ok: true });
+  }
+  return out({ ok: false, error: 'unknown action' });
+}`}
+function viewSettings(){
+  return `<div class="top"><div><p>${syncLabel()}</p><h1>設定與同步</h1></div></div>
+  <section class="panel glass settings"><h2>雲端同步（Google 雲端硬碟）</h2>
+   <p>資料會存成你 Google 雲端硬碟裡的一個檔案 <b>my-dashboard-data.json</b>，手機和電腦讀寫同一份。設定一次就好：</p>
+   <div class="fld"><label for="tok">1. 自己取一組同步密碼</label><input class="in" id="tok" value="${esc(CFG.token)}" placeholder="例如一串你記得住的英數字" autocomplete="off"><span class="msg">只用來保護這份資料，不要用你其他帳號的密碼。</span></div>
+   <div class="lab">2. 到 script.google.com 建一個新專案，把下面的程式碼整段貼上</div>
+   <pre class="code" id="code">${esc(scriptCode(CFG.token))}</pre>
+   <div><button class="btn sm ghost" data-act="copyScript">複製程式碼</button></div>
+   <ol class="steps" start="3"><li>右上角「部署」→「新增部署作業」→ 類型選「網頁應用程式」。</li><li>「執行身分」選自己，「誰可以存取」選「所有人」，按部署並同意授權。</li><li>把產生的網址（結尾是 /exec）貼到下面。</li></ol>
+   <div class="fld" id="f-url"><label for="url">網頁應用程式網址</label><input class="in" id="url" value="${esc(CFG.url)}" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"><span class="msg">其他裝置只要填同一組密碼和網址就會同步。</span></div>
+   <div class="chips"><button class="btn" data-act="saveSync">儲存並同步</button>${CFG.url?'<button class="btn ghost" data-act="offSync">關閉同步</button>':''}</div>
+  </section>
+  <section class="panel glass"><h2>備份</h2><p>把全部資料存成一個檔案，或從檔案還原。</p>
+   <div class="chips"><button class="btn ghost" data-act="export">下載備份檔</button><label class="btn ghost" style="cursor:pointer">從備份檔還原<input type="file" id="imp" accept="application/json,.json" hidden></label></div></section>
+  <section class="panel glass"><h2>裝成 App</h2>
+   <ol class="steps"><li><b>iPhone / iPad</b>：用 Safari 開啟 → 分享 → 加入主畫面。</li><li><b>Mac Chrome</b>：網址列右邊的安裝圖示，或選單 → 投放、儲存及分享 → 安裝頁面。</li><li><b>Mac Safari</b>：檔案 → 加入 Dock。</li></ol></section>`}
+
+function render(){const r=route();renderSide();
+  const m=$('#main');
+  m.innerHTML=r.v==='project'?viewProject(P(r.id)):r.v==='links'?viewLinks():r.v==='settings'?viewSettings():viewHome();
+  document.title=(r.v==='project'?P(r.id).name+'｜':'')+'我的工作台'}
+
+/* ---- toast / modal ---- */
+function toast(text,kind,undo){const el=document.createElement('div');el.className='toast'+(kind==='bad'?' bad':'');el.setAttribute('role','status');
+  el.innerHTML=`<span>${esc(text)}</span>`+(undo?'<button type="button">復原</button>':'');
+  if(undo) el.querySelector('button').addEventListener('click',()=>{S=JSON.parse(undo);save();if(route().v==='home'&&location.hash)0;render();el.remove();toast('已復原')});
+  $('#toasts').appendChild(el);setTimeout(()=>el.remove(),undo?6000:2600)}
+let lastFocus=null;
+function closeModal(){$('#modal').innerHTML='';lastFocus&&lastFocus.focus&&lastFocus.focus()}
+function modal(title,body,okText,onOk,danger){lastFocus=document.activeElement;
+  $('#modal').innerHTML=`<div class="ovl"><form class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}" novalidate><h2>${esc(title)}</h2>${body}<div class="row"><button type="button" class="btn ghost" data-close>取消</button><button type="submit" class="btn${danger?' danger':''}">${esc(okText)}</button></div></form></div>`;
+  const f=$('#modal form');const first=f.querySelector('input:not([type=radio]),textarea,button');first&&first.focus();
+  f.addEventListener('submit',e=>{e.preventDefault();if(onOk(f)!==false)closeModal()});
+  $('#modal .ovl').addEventListener('click',e=>{if(e.target.classList.contains('ovl')||e.target.closest('[data-close]'))closeModal()})}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').firstChild)closeModal()});
+const need=(f,name,msg)=>{const i=f.elements[name],w=i.closest('.fld');if(!i.value.trim()){w.classList.add('err');w.querySelector('.msg').textContent=msg;i.focus();return false}w.classList.remove('err');return true};
+
+function projectForm(p){const e=!!p;
+  modal(e?'編輯專案':'新增專案',`
+   <div class="fld"><label for="pn">專案名稱</label><input class="in" id="pn" name="name" value="${esc(e?p.name:'')}" placeholder="例如：個人作品集" maxlength="40"><span class="msg"></span></div>
+   <div class="fld"><label for="pd">一句話說明（可不填）</label><input class="in" id="pd" name="desc" value="${esc(e?p.desc:'')}" maxlength="80"></div>
+   <div class="fld"><label for="pl">相關網址（可不填）</label><input class="in" id="pl" name="link" value="${esc(e?p.link:'')}" placeholder="https://" inputmode="url"><span class="msg"></span></div>
+   <div><div class="lab">圖示</div><div class="pick">${EMOJI.map((x,i)=>`<label><input type="radio" name="emoji" value="${x}"${(e?p.emoji===x:i===0)?' checked':''}><span>${x}</span></label>`).join('')}</div></div>
+   <div><div class="lab">顏色</div><div class="pick">${COLORS.map((c,i)=>`<label><input type="radio" name="color" value="${i}"${(e?p.color===i:i===S.projects.length%COLORS.length)?' checked':''}><span class="c" style="--c1:${c[0]};--c2:${c[1]}" title="顏色 ${i+1}"></span></label>`).join('')}</div></div>
+   ${e?'':`<div><div class="lab">階段怎麼分</div><div class="pick"><label><input type="radio" name="tpl" value="one" checked><span class="w">一張清單就好</span></label><label><input type="radio" name="tpl" value="web"><span class="w">構想 → 製作 → 上線</span></label><label><input type="radio" name="tpl" value="learn"><span class="w">入門 → 練習 → 做作品</span></label></div></div>`}`,
+   e?'儲存':'建立專案',f=>{
+    if(!need(f,'name','請輸入專案名稱'))return false;
+    let link=f.elements.link.value.trim();if(link&&!/^https?:\/\//i.test(link))link='https://'+link;
+    const v={name:f.elements.name.value.trim(),desc:f.elements.desc.value.trim(),link,emoji:f.elements.emoji.value,color:+f.elements.color.value};
+    if(e){Object.assign(p,v);save();render();toast('已儲存')}
+    else{const np=Object.assign({id:uid(),notes:'',stages:TEMPLATES[f.elements.tpl.value].map(n=>({id:uid(),name:n,todos:[]}))},v);S.projects.push(np);save();go('p/'+np.id);render();toast('已建立「'+np.name+'」')}})}
+function linkForm(){const groups=[...new Set(S.links.map(l=>l.group).filter(Boolean))];
+  modal('新增收藏',`
+   <div class="fld"><label for="lu">網址</label><input class="in" id="lu" name="url" placeholder="https://" inputmode="url"><span class="msg"></span></div>
+   <div class="fld"><label for="lt">名稱</label><input class="in" id="lt" name="title" maxlength="30" placeholder="不填就用網域名稱"><span class="msg"></span></div>
+   <div class="fld"><label for="lg">分類</label><input class="in" id="lg" name="group" list="lgs" maxlength="20" placeholder="例如：設計靈感"><datalist id="lgs">${groups.map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>`,
+   '加入收藏',f=>{if(!need(f,'url','請輸入網址'))return false;
+    let url=f.elements.url.value.trim();if(!/^https?:\/\//i.test(url))url='https://'+url;
+    try{new URL(url)}catch(err){const w=f.elements.url.closest('.fld');w.classList.add('err');w.querySelector('.msg').textContent='網址格式不對，例如 https://example.com';return false}
+    S.links.push({id:uid(),url,title:f.elements.title.value.trim()||host(url),group:f.elements.group.value.trim()||'未分類'});save();render();toast('已加入收藏')})}
+function confirmBox(title,text,ok,fn){modal(title,`<p>${esc(text)}</p>`,ok,()=>{fn()},true)}
+
+/* ---- actions ---- */
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');
+  const a=e.target.closest('[data-act]');
+  if(a){const d=a.dataset,p=d.p&&P(d.p),s=p&&d.s&&p.stages.find(x=>x.id===d.s),snap=JSON.stringify(S);
+    switch(d.act){
+      case 'toggle':{const t=s.todos.find(x=>x.id===d.t);t.done=a.checked;save();const was=pstat(p);render();if(a.checked&&was.t&&was.d===was.t)toast('「'+p.name+'」全部完成 🎉');return}
+      case 'delTodo':s.todos=s.todos.filter(x=>x.id!==d.t);save();render();toast('已刪除待辦',null,snap);return
+      case 'addStage':p.stages.push({id:uid(),name:'新階段',todos:[]});save();render();{const ins=document.querySelectorAll('[data-f=stageName]');const i=ins[ins.length-1];i&&(i.focus(),i.select())}return
+      case 'delStage':{const del=()=>{p.stages=p.stages.filter(x=>x.id!==s.id);save();render();toast('已刪除階段',null,snap)};s.todos.length?confirmBox('刪除「'+s.name+'」？','裡面的 '+s.todos.length+' 個待辦會一起刪除。','刪除',del):del();return}
+      case 'delProject':confirmBox('刪除「'+p.name+'」？','專案裡的階段、待辦和筆記都會刪除。刪除後幾秒內還能復原。','刪除專案',()=>{S.projects=S.projects.filter(x=>x.id!==p.id);save();go('');render();toast('已刪除專案',null,snap)});return
+      case 'editProject':projectForm(p);return
+      case 'newProject':projectForm();return
+      case 'newLink':linkForm();return
+      case 'delLink':e.preventDefault();S.links=S.links.filter(x=>x.id!==d.id);save();render();toast('已移除收藏',null,snap);return
+      case 'clearExample':S.projects=[];S.links=[];S.example=false;save();render();toast('已清空範例',null,snap);return
+      case 'export':{const u=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));const l=document.createElement('a');l.href=u;l.download='my-dashboard-backup.json';l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('已下載備份檔');return}
+      case 'copyScript':{const t=scriptCode($('#tok').value.trim());const ok=()=>toast('已複製程式碼');try{navigator.clipboard.writeText(t).then(ok,()=>toast('複製失敗，請手動選取程式碼','bad'))}catch(err){toast('複製失敗，請手動選取程式碼','bad')}return}
+      case 'saveSync':{const url=$('#url').value.trim(),tok=$('#tok').value.trim(),w=$('#f-url');
+        if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){w.classList.add('err');w.querySelector('.msg').textContent='網址要是 https://script.google.com/ 開頭、/exec 結尾';return}
+        if(!tok){toast('請先填同步密碼','bad');$('#tok').focus();return}
+        CFG={url,token:tok};try{localStorage.setItem(LSC,JSON.stringify(CFG))}catch(err){}pull(true);return}
+      case 'offSync':CFG={url:'',token:''};try{localStorage.removeItem(LSC)}catch(err){}syncState='off';render();toast('已關閉同步，資料留在這台裝置');return
+    }}
+  if(g){if(e.target.closest('a.tile'))return;go(g.dataset.go);}
+});
+document.addEventListener('change',e=>{const i=e.target,d=i.dataset;
+  if(i.id==='imp'&&i.files[0]){const fr=new FileReader();fr.onload=()=>{try{const j=JSON.parse(fr.result);if(!Array.isArray(j.projects)||!Array.isArray(j.links))throw 0;const snap=JSON.stringify(S);S=j;save();render();toast('已從備份還原',null,snap)}catch(err){toast('這個檔案不是工作台的備份檔','bad')}};fr.readAsText(i.files[0]);return}
+  if(!d.f)return;const p=P(d.p);if(!p)return;const s=d.s&&p.stages.find(x=>x.id===d.s);
+  if(d.f==='stageName'){s.name=i.value.trim()||'未命名';i.value=s.name}
+  else if(d.f==='todoText'){const t=s.todos.find(x=>x.id===d.t);if(!i.value.trim()){i.value=t.text;return}t.text=i.value.trim()}
+  else if(d.f==='notes'){p.notes=i.value}
+  S.example=false;save();renderSide()});
+document.addEventListener('input',e=>{if(e.target.id==='tok'){const c=$('#code');if(c)c.textContent=scriptCode(e.target.value.trim())}});
+document.addEventListener('keydown',e=>{const i=e.target;
+  if(e.key==='Enter'&&i.dataset&&i.dataset.add&&!e.isComposing){const v=i.value.trim();if(!v)return;const p=P(i.dataset.p),s=p.stages.find(x=>x.id===i.dataset.add);s.todos.push(T(v));S.example=false;save();render();const n=document.querySelector(`[data-add="${s.id}"]`);n&&n.focus()}
+  else if(e.key==='Enter'&&i.classList&&i.classList.contains('inl')&&!e.isComposing)i.blur()});
+
+/* ---- sync（Google Apps Script，後寫的蓋掉先寫的） ---- */
+async function api(body){const r=await fetch(CFG.url,{method:'POST',body:JSON.stringify(Object.assign({token:CFG.token},body))});const j=await r.json();if(!j.ok)throw new Error(j.error||'sync error');return j}
+function setSync(st){syncState=st;if(st==='ok')syncAt=Date.now();renderSide();const t=document.querySelector('.top p');if(t&&route().v==='settings')t.textContent=syncLabel()}
+async function push(){if(!CFG.url)return;setSync('busy');try{await api({action:'set',data:S});setSync('ok')}catch(e){setSync('bad')}}
+async function pull(loud){if(!CFG.url)return;setSync('busy');
+  try{const j=await api({action:'get'});
+    if(j.data&&j.updatedAt>S.updatedAt){S=j.data;persist();setSync('ok');render();loud&&toast('已載入雲端上較新的資料')}
+    else if(S.updatedAt>(j.updatedAt||0)||!j.data){await api({action:'set',data:S});setSync('ok');if(loud){render();toast('同步完成')}}
+    else{setSync('ok');if(loud){render();toast('同步完成')}}
+  }catch(e){setSync('bad');if(loud){render();toast(e.message==='unauthorized'?'同步密碼和腳本裡的不一樣':'連不上同步網址，請檢查部署設定','bad')}}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+
+render();pull();
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
