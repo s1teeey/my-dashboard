@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>我的工作台</title>
+<title>R1's Dashboard</title>
 <meta name="theme-color" content="#8F5CF0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="工作台">
+<meta name="apple-mobile-web-app-title" content="R1">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -216,7 +216,65 @@ html[data-theme=voyage] .tag,html[data-theme=meadow] .tag{padding:2px 10px}
 .themes button[aria-pressed=true]{border-color:var(--ink)}
 .themes i{display:flex;gap:4px}
 .themes i b{width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.12)}
-.themes small{font-weight:600;color:var(--muted)}
+
+/* ---- 各風格的版面 ---- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.pcard{display:grid;grid-template-columns:42px minmax(0,1fr) 64px;gap:16px 12px;align-items:center;text-align:left;padding:20px;border:0;border-radius:var(--r);background:#fff;box-shadow:var(--shadow);transition:transform var(--dur)}
+.pcard:hover{transform:translateY(-3px)}
+.pcard .ring{width:64px;height:64px}
+.pcard .ring b{font-size:15px}
+.pcard .track{grid-column:1/-1}
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.chipsl{display:flex;flex-wrap:wrap;gap:8px;padding-top:14px}
+.chipl{display:inline-flex;gap:8px;align-items:center;padding:5px 14px 5px 5px;border-radius:99px;background:var(--soft);text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;transition:background var(--dur)}
+.chipl:hover{background:var(--line)}
+.chipl .av{border-radius:50%;background:#fff}
+.mast.hero{flex-direction:column;align-items:center;text-align:center;gap:18px;padding:28px 0 12px}
+.mast.hero h1{font-size:clamp(40px,6vw,64px);line-height:1.1}
+.mast.hero .stats{gap:10px;flex-wrap:wrap;justify-content:center}
+.mast.hero .stats div{flex-direction:row;gap:8px;align-items:baseline;padding:8px 18px;border-radius:99px;background:#fff;box-shadow:var(--shadow)}
+.mast.hero .stats b{font-size:20px}
+.tiles3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+.tiles3 div{padding:18px 20px;border-radius:22px;background:#E4E0FB}
+.tiles3 div:nth-child(2){background:#D5F0EC}
+.tiles3 div:nth-child(3){background:#FBE3D6}
+.tiles3 b{font-size:34px}
+.panel.bare{background:none;box-shadow:none;padding:0;border-radius:0}
+.hscroll{display:flex;gap:16px;overflow-x:auto;padding:14px 4px 16px;margin:0 -4px;scroll-snap-type:x proximity}
+.ticket{flex:0 0 300px;display:flex;flex-direction:column;gap:16px;text-align:left;padding:20px;border:0;border-radius:24px;background:#fff;box-shadow:var(--shadow);scroll-snap-align:start;transition:transform var(--dur)}
+.ticket:hover{transform:translateY(-3px)}
+.thead{display:flex;gap:12px;align-items:center;min-width:0}
+.route{display:flex;align-items:center;gap:12px}
+.route b{font-size:28px;font-weight:var(--hw);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.route i{flex:1;border-top:2px dotted var(--faint)}
+.route span{font-size:13px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.tfoot{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.go{background:var(--btn-bg);color:var(--btn-fg);border-radius:99px;padding:8px 18px;font-weight:600;font-size:13.5px;white-space:nowrap}
+.btiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;padding-top:14px}
+.btile{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;padding:14px 8px;border-radius:18px;background:var(--soft);text-decoration:none;color:var(--ink);transition:background var(--dur)}
+.btile:hover{background:var(--accent-soft)}
+.btile .av{width:40px;height:40px;border-radius:14px;background:#fff}
+.btile b{font-size:12.5px;font-weight:600;line-height:1.3;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (min-width:821px){
+  html[data-theme=meadow] .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+  html[data-theme=meadow] .side{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;align-items:center;gap:6px;padding:12px clamp(20px,4vw,56px);overflow:visible;background:rgba(245,250,255,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  html[data-theme=meadow] .side .pn,html[data-theme=meadow] .side h2,html[data-theme=meadow] .side .sync,html[data-theme=meadow] .nav small{display:none}
+  html[data-theme=meadow] .brand{padding:0 18px 0 0}
+  html[data-theme=meadow] .nav{width:auto;border-radius:99px;padding:8px 16px}
+  html[data-theme=meadow] main{margin:0 auto;padding-top:20px}
+  html[data-theme=voyage] .app{grid-template-columns:100px minmax(0,1fr)}
+  html[data-theme=voyage] .side{top:12px;height:calc(100dvh - 24px);margin:12px 0 12px 12px;padding:16px 0;align-items:center;gap:6px;background:#fff;border-radius:26px;box-shadow:var(--shadow)}
+  html[data-theme=voyage] .side .nm,html[data-theme=voyage] .side small,html[data-theme=voyage] .side h2,html[data-theme=voyage] .sync span{display:none}
+  html[data-theme=voyage] .brand{padding:0 0 10px}
+  html[data-theme=voyage] .brand img{width:36px;height:36px;border-radius:12px}
+  html[data-theme=voyage] .nav{width:48px;height:48px;justify-content:center;padding:0;border-radius:16px;flex:none}
+  html[data-theme=voyage] .nav .ic{width:20px;height:20px}
+  html[data-theme=voyage] .nav[aria-current=page]{background:#111216;color:#fff}
+  html[data-theme=voyage] .nav[aria-current=page] .pc{color:#fff}
+  html[data-theme=voyage] .phead{background:var(--cs)}
+  html[data-theme=voyage] .phead .pi{background:#fff}
+  html[data-theme=voyage] .ring .bg{stroke:#fff}
+}
 
 /* ---- 手機版面 ---- */
 @media (max-width:820px){
@@ -253,6 +311,12 @@ html[data-theme=voyage] .tag,html[data-theme=meadow] .tag{padding:2px 10px}
   .dock button{width:52px;height:52px;border-radius:50%;border:0;background:none;color:var(--muted);display:grid;place-items:center;transition:background var(--dur),color var(--dur),transform var(--dur)}
   .dock .ic{width:22px;height:22px}
   .toasts{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .duo{grid-template-columns:minmax(0,1fr)}
+  .mast.hero{padding-top:8px}
+  .tiles3{gap:8px}
+  .tiles3 div{padding:14px;box-shadow:none}
+  .tiles3 b{font-size:26px}
+  .ticket{flex-basis:78vw}
   .dock button:active{transform:scale(.9)}
   .dock button[aria-current=page]{background:var(--btn-bg);color:var(--btn-fg)}
 }
@@ -261,10 +325,10 @@ html[data-theme=voyage] .tag,html[data-theme=meadow] .tag{padding:2px 10px}
 </head>
 <body>
 <div class="app">
-  <aside class="side" id="side" aria-label="主選單"></aside>
+  <aside class="side" id="side" aria-label="Main"></aside>
   <main id="main"></main>
 </div>
-<nav class="dock" id="dock" aria-label="主選單"></nav>
+<nav class="dock" id="dock" aria-label="Main"></nav>
 <div id="modal"></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
@@ -314,7 +378,7 @@ if(S.v!==3){seed().projects.forEach(p=>{if(!S.projects.some(q=>q.name===p.name))
 let CFG={url:'',token:''};try{CFG=Object.assign(CFG,JSON.parse(localStorage.getItem(LSC)||'{}'))}catch(e){}
 let syncState=CFG.url?'idle':'off',syncAt=0,syncTimer=null;
 
-function persist(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){toast('儲存失敗：瀏覽器空間不足或被封鎖','bad')}}
+function persist(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){toast('Save failed: storage unavailable','bad')}}
 function save(){S.updatedAt=Date.now();persist();if(CFG.url){clearTimeout(syncTimer);syncTimer=setTimeout(push,1500)}}
 
 /* ---- stats ---- */
@@ -326,10 +390,10 @@ const P=id=>S.projects.find(p=>p.id===id);
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}};
 
 function track(p,big){
-  if(!p.stages.length) return '<div class="cnt">還沒有階段</div>';
+  if(!p.stages.length) return '<div class="cnt">No stages</div>';
   const cur=curStage(p);
   return `<div class="track${big?' big':''}">${p.stages.map(s=>{const t=s.todos.length,d=s.todos.filter(x=>x.done).length;
-    return `<div class="seg${s===cur?' cur':''}" style="flex:${Math.max(1,t)}" title="${esc(s.name)} ${d}/${t}"><span class="sn">${esc(s.name)}</span><i><b style="width:${t?d/t*100:0}%"></b></i><span class="sc">${d}/${t} 完成</span></div>`}).join('')}</div>`}
+    return `<div class="seg${s===cur?' cur':''}" style="flex:${Math.max(1,t)}" title="${esc(s.name)} ${d}/${t}"><span class="sn">${esc(s.name)}</span><i><b style="width:${t?d/t*100:0}%"></b></i><span class="sc">${d}/${t}</span></div>`}).join('')}</div>`}
 
 /* ---- routing ---- */
 const route=()=>{const h=location.hash.replace(/^#\/?/,'');const m=h.match(/^p\/(.+)$/);if(m&&P(m[1]))return {v:'project',id:m[1]};return {v:['links','settings'].includes(h)?h:'home'}};
@@ -337,65 +401,71 @@ const go=h=>{location.hash='#/'+h};
 window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});
 
 /* ---- views ---- */
+const TH=()=>document.documentElement.dataset.theme||'editorial';
 function renderSide(){const r=route();
   const cur=(v,id)=>r.v===v&&(id==null||r.id===id)?' aria-current="page"':'';
-  $('#side').innerHTML=`<div class="brand"><img src="icon-192.png" alt="">我的工作台</div>
-   <button class="nav" data-go=""${cur('home')}>${ic('home')}<span class="nm">總覽</span></button>
-   <button class="nav" data-go="links"${cur('links')}>${ic('bookmark')}<span class="nm">收藏網站</span><small>${S.links.length}</small></button>
-   <h2>專案</h2>
-   ${S.projects.map(p=>`<button class="nav" data-go="p/${p.id}"${cur('project',p.id)} style="${cvar(p)}"><span class="pc" style="display:grid">${ic(p.icon)}</span><span class="nm">${esc(p.name)}</span><small>${pstat(p).pct}%</small></button>`).join('')}
-   <button class="nav" data-act="newProject">${ic('plus')}<span class="nm">新增專案</span></button>
+  $('#side').innerHTML=`<div class="brand"><img src="icon-192.png" alt=""><span class="nm">R1's Dashboard</span></div>
+   <button class="nav" data-go=""${cur('home')} title="Home">${ic('home')}<span class="nm">Home</span></button>
+   <button class="nav" data-go="links"${cur('links')} title="Bookmarks">${ic('bookmark')}<span class="nm">Bookmarks</span><small>${S.links.length}</small></button>
+   <h2>Projects</h2>
+   ${S.projects.map(p=>`<button class="nav pn" data-go="p/${p.id}"${cur('project',p.id)} style="${cvar(p)}" title="${esc(p.name)}"><span class="pc" style="display:grid">${ic(p.icon)}</span><span class="nm">${esc(p.name)}</span><small>${pstat(p).pct}%</small></button>`).join('')}
+   <button class="nav pn" data-act="newProject" title="New Project">${ic('plus')}<span class="nm">New Project</span></button>
    <div class="sp"></div>
-   <div class="sync ${({ok:'ok',bad:'bad',busy:'busy'})[syncState]||''}"><i></i><span>${syncLabel()}</span></div>
-   <button class="nav" data-go="settings"${cur('settings')}>${ic('settings')}<span class="nm">設定與同步</span></button>`;
-  $('#dock').innerHTML=`<button data-go=""${cur('home')} aria-label="總覽">${ic('home')}</button><button data-go="links"${cur('links')} aria-label="收藏網站">${ic('bookmark')}</button><button data-act="newProject" aria-label="新增專案">${ic('plus')}</button><button data-go="settings"${cur('settings')} aria-label="設定">${ic('settings')}</button>`}
-function syncLabel(){return {off:'只存在這台裝置',idle:'已設定同步',busy:'同步中…',ok:'已同步 '+new Date(syncAt).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}),bad:'同步失敗，資料仍在本機'}[syncState]}
-const emptyBox=(icon,title,text,btn)=>`<div class="empty"><div class="e">${ic(icon)}</div>${title?`<b>${title}</b>`:''}<span>${text}</span>${btn||''}</div>`;
+   ${syncState!=='off'?`<div class="sync ${({ok:'ok',bad:'bad',busy:'busy'})[syncState]||''}"><i></i><span>${syncLabel()}</span></div>`:''}
+   <button class="nav" data-go="settings"${cur('settings')} title="Settings">${ic('settings')}<span class="nm">Settings</span></button>`;
+  $('#dock').innerHTML=`<button data-go=""${cur('home')} aria-label="Home">${ic('home')}</button><button data-go="links"${cur('links')} aria-label="Bookmarks">${ic('bookmark')}</button><button data-act="newProject" aria-label="New Project">${ic('plus')}</button><button data-go="settings"${cur('settings')} aria-label="Settings">${ic('settings')}</button>`}
+function syncLabel(){return {off:'',idle:'Sync on',busy:'Syncing',ok:'Synced '+new Date(syncAt).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}),bad:'Sync failed'}[syncState]}
+const emptyBox=(icon,title,btn)=>`<div class="empty"><div class="e">${ic(icon)}</div><b>${title}</b>${btn||''}</div>`;
+const ring=(p,st)=>{const C=2*Math.PI*42;return `<span class="ring"><svg viewBox="0 0 96 96" width="100%" height="100%"><circle class="bg" cx="48" cy="48" r="42"/><circle class="fg" cx="48" cy="48" r="42" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-st.pct/100)}"/></svg><b>${st.pct}%</b></span>`};
+const nextText=(p,st)=>{const n=nextTodo(p);return n?'Next: '+esc(n.t.text):st.t?'Completed':'No tasks'};
 
 function viewHome(){
-  const all=S.projects.map(pstat),t=all.reduce((a,x)=>a+x.t,0),d=all.reduce((a,x)=>a+x.d,0);
-  const today=new Date().toLocaleDateString('zh-TW',{month:'long',day:'numeric',weekday:'long'});
+  const th=TH(),all=S.projects.map(pstat),t=all.reduce((a,x)=>a+x.t,0),d=all.reduce((a,x)=>a+x.d,0);
+  const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
   const nexts=S.projects.map(p=>({p,n:nextTodo(p)})).filter(x=>x.n);
-  return `<header class="mast"><div><p class="kick">${today}</p><h1>我的專案</h1></div>
-    <div class="stats"><div><b>${S.projects.length}</b><span>個專案</span></div><div><b>${t-d}</b><span>件還沒做</span></div><div><b>${d}</b><span>件已完成</span></div></div>
-    <button class="btn" data-act="newProject">${ic('plus')}新增專案</button></header>
+  const stats=`<div class="stats"><div><b>${S.projects.length}</b><span>Projects</span></div><div><b>${t-d}</b><span>Open</span></div><div><b>${d}</b><span>Done</span></div></div>`;
+  const newBtn=`<button class="btn" data-act="newProject">${ic('plus')}New Project</button>`;
+  const noProj=emptyBox('layout','No projects',newBtn);
+  const nextPanel=`<section class="panel"><h2>Next Steps</h2>
+     ${nexts.length?nexts.map(({p,n})=>`<div class="next" style="${cvar(p)}"><input type="checkbox" class="ck" data-act="toggle" data-p="${p.id}" data-s="${n.s.id}" data-t="${n.t.id}" aria-label="Complete ${esc(n.t.text)}"><div class="t"><b>${esc(n.t.text)}</b><small>${esc(p.name)} · ${esc(n.s.name)}</small></div></div>`).join(''):emptyBox('cup','All clear')}</section>`;
+  const bmHead=`<h2>Bookmarks <button class="lk" data-go="links">All ${S.links.length}</button></h2>`;
+  const noBm=emptyBox('bookmark','No bookmarks',`<button class="btn sm" data-act="newLink">${ic('plus')}New Bookmark</button>`);
+  if(th==='meadow') return `<header class="mast hero"><p class="kick">${today}</p><h1>Projects</h1>${stats}${newBtn}</header>
+   ${S.projects.length?`<section class="cards">${S.projects.map(p=>{const st=pstat(p);return `<button class="pcard" data-go="p/${p.id}" style="${cvar(p)}"><span class="pi">${ic(p.icon)}</span><span class="who"><span class="nm">${esc(p.name)}</span><small>${nextText(p,st)}</small></span>${ring(p,st)}${track(p)}</button>`}).join('')}</section>`:`<section class="panel">${noProj}</section>`}
+   <div class="duo">${nextPanel}<section class="panel">${bmHead}${S.links.length?`<div class="chipsl">${S.links.slice(0,12).map(l=>`<a class="chipl" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av">${esc(mark(l))}</span>${esc(l.title)}</a>`).join('')}</div>`:noBm}</section></div>`;
+  if(th==='voyage') return `<header class="mast"><div><p class="kick">${today}</p><h1>Projects</h1></div>${newBtn}</header>
+   ${stats.replace('class="stats"','class="stats tiles3"')}
+   <section class="panel bare"><h2>Progress</h2>${S.projects.length?`<div class="hscroll">${S.projects.map(p=>{const st=pstat(p),n=nextTodo(p);return `<button class="ticket" data-go="p/${p.id}" style="${cvar(p)}"><span class="thead"><span class="pi">${ic(p.icon)}</span><span class="who"><span class="nm">${esc(p.name)}</span><small>${esc(p.desc||'')}</small></span></span><span class="route"><b>${st.pct}%</b><i></i><span>${st.d} / ${st.t}</span></span>${track(p)}<span class="tfoot"><span class="who"><small>${n?'Next':'Status'}</small><span class="nm">${n?esc(n.t.text):st.t?'Completed':'No tasks'}</span></span><span class="go">Open</span></span></button>`}).join('')}</div>`:noProj}</section>
+   <div class="duo">${nextPanel}<section class="panel">${bmHead}${S.links.length?`<div class="btiles">${S.links.slice(0,8).map(l=>`<a class="btile" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av">${esc(mark(l))}</span><b>${esc(l.title)}</b></a>`).join('')}</div>`:noBm}</section></div>`;
+  return `<header class="mast"><div><p class="kick">${today}</p><h1>Projects</h1></div>${stats}${newBtn}</header>
   <div class="home">
-   <section class="panel"><h2>專案進度 <small>每一段是一個階段</small></h2>
-    <div class="lanes">${S.projects.length?S.projects.map(p=>{const st=pstat(p),n=nextTodo(p);return `<button class="lane" data-go="p/${p.id}" style="${cvar(p)}"><span class="pi">${ic(p.icon)}</span><span class="who"><span class="nm">${esc(p.name)}</span><small>${n?'下一步：'+esc(n.t.text):st.t?'全部完成':'還沒有待辦'}</small></span>${track(p)}<span class="pct${st.t&&st.d===st.t?' full':''}">${st.pct}%</span></button>`}).join('')
-     :emptyBox('layout','還沒有專案','建立第一個專案，進度會顯示在這裡。',`<button class="btn" data-act="newProject">${ic('plus')}新增專案</button>`)}</div>
+   <section class="panel"><h2>Progress</h2>
+    <div class="lanes">${S.projects.length?S.projects.map(p=>{const st=pstat(p);return `<button class="lane" data-go="p/${p.id}" style="${cvar(p)}"><span class="pi">${ic(p.icon)}</span><span class="who"><span class="nm">${esc(p.name)}</span><small>${nextText(p,st)}</small></span>${track(p)}<span class="pct${st.t&&st.d===st.t?' full':''}">${st.pct}%</span></button>`}).join(''):noProj}</div>
    </section>
-   <aside class="rail">
-    <section class="panel"><h2>下一步可以做</h2>
-     ${nexts.length?nexts.map(({p,n})=>`<div class="next" style="${cvar(p)}"><input type="checkbox" class="ck" data-act="toggle" data-p="${p.id}" data-s="${n.s.id}" data-t="${n.t.id}" aria-label="完成 ${esc(n.t.text)}"><div class="t"><b>${esc(n.t.text)}</b><small>${esc(p.name)} · ${esc(n.s.name)}</small></div></div>`).join('')
-      :emptyBox('cup','','目前沒有待辦，可以休息一下。')}
-    </section>
-    <section class="panel"><h2>收藏網站 <button class="lk" data-go="links">全部 ${S.links.length} 個</button></h2>
-     ${S.links.length?S.links.slice(0,6).map(linkRow).join(''):emptyBox('bookmark','','還沒有收藏。',`<button class="btn sm" data-act="newLink">${ic('plus')}新增收藏</button>`)}
-    </section>
-   </aside>
+   <aside class="rail">${nextPanel}<section class="panel">${bmHead}${S.links.length?S.links.slice(0,6).map(linkRow).join(''):noBm}</section></aside>
   </div>`}
-function linkRow(l){return `<a class="row" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av">${esc(l.mark||(l.title.trim()[0]||'?').toUpperCase())}</span><span class="tt"><b>${esc(l.title)}</b><small>${esc(host(l.url))}</small></span><button class="x" data-act="editLink" data-id="${l.id}" aria-label="編輯 ${esc(l.title)}">${ic('pen')}</button><button class="x" data-act="delLink" data-id="${l.id}" aria-label="刪除 ${esc(l.title)}">${ic('x')}</button></a>`}
+const mark=l=>l.mark||(l.title.trim()[0]||'?').toUpperCase();
+function linkRow(l){return `<a class="row" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av">${esc(mark(l))}</span><span class="tt"><b>${esc(l.title)}</b><small>${esc(host(l.url))}</small></span><button class="x" data-act="editLink" data-id="${l.id}" aria-label="Edit ${esc(l.title)}">${ic('pen')}</button><button class="x" data-act="delLink" data-id="${l.id}" aria-label="Delete ${esc(l.title)}">${ic('x')}</button></a>`}
 
-function viewProject(p){const st=pstat(p),cur=curStage(p),C=2*Math.PI*42;
-  return `<div class="mback"><button class="ib" data-go="" aria-label="回總覽">${ic('back')}</button><b>專案</b><button class="ib" data-act="editProject" data-p="${p.id}" aria-label="編輯專案">${ic('pen')}</button></div>
+function viewProject(p){const st=pstat(p),cur=curStage(p);
+  return `<div class="mback"><button class="ib" data-go="" aria-label="Home">${ic('back')}</button><b>Project</b><button class="ib" data-act="editProject" data-p="${p.id}" aria-label="Edit">${ic('pen')}</button></div>
   <header class="phead" style="${cvar(p)}"><span class="pi">${ic(p.icon)}</span>
     <div class="info"><h1>${esc(p.name)}</h1>${p.desc?`<p>${esc(p.desc)}</p>`:''}
-     <div class="meta"><span class="pill on">${st.d} / ${st.t} 完成</span>${cur?`<span class="pill">目前：${esc(cur.name)}</span>`:st.t?'<span class="pill">全部完成</span>':''}${p.link?`<a class="pill" href="${esc(p.link)}" target="_blank" rel="noopener">開啟網站${ic('out')}</a>`:''}<button class="pill" data-act="editProject" data-p="${p.id}">${ic('pen')}編輯</button></div></div>
-    <div class="ring"><svg viewBox="0 0 96 96" width="100%" height="100%"><circle class="bg" cx="48" cy="48" r="42"/><circle class="fg" cx="48" cy="48" r="42" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-st.pct/100)}"/></svg><b>${st.pct}%</b></div></header>
-  <section class="panel" style="${cvar(p)}"><h2>進度</h2><div class="body">${track(p,true)}</div></section>
+     <div class="meta"><span class="pill on">${st.d} / ${st.t}</span>${cur?`<span class="pill">Current: ${esc(cur.name)}</span>`:st.t?'<span class="pill">Completed</span>':''}${p.link?`<a class="pill" href="${esc(p.link)}" target="_blank" rel="noopener">Open Site${ic('out')}</a>`:''}<button class="pill" data-act="editProject" data-p="${p.id}">${ic('pen')}Edit</button></div></div>
+    ${ring(p,st)}</header>
+  <section class="panel" style="${cvar(p)}"><h2>Progress</h2><div class="body">${track(p,true)}</div></section>
   <div class="board" style="${cvar(p)}">
-   ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col${s===cur?' cur':''}"><header><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="階段名稱">${s===cur?'<span class="tag">進行中</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="刪除階段 ${esc(s.name)}">${ic('x')}</button></header>
-     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}"><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="完成"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="待辦內容"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="刪除 ${esc(t.text)}">${ic('x')}</button></div>`).join('')}
-     <input class="add" placeholder="新增待辦，按 Enter" data-add="${s.id}" data-p="${p.id}" aria-label="在 ${esc(s.name)} 新增待辦"></section>`}).join('')}
-   <button class="newcol" data-act="addStage" data-p="${p.id}">${ic('plus')}新增階段</button></div>
-  <section class="panel" style="${cvar(p)}"><h2>筆記 <small>自動儲存</small></h2><textarea class="note" data-f="notes" data-p="${p.id}" placeholder="想法、連結、卡住的地方，都可以寫在這裡">${esc(p.notes||'')}</textarea></section>
-  <div><button class="btn ghost sm" data-act="delProject" data-p="${p.id}">刪除這個專案</button></div>`}
+   ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col${s===cur?' cur':''}"><header><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="Stage name">${s===cur?'<span class="tag">In Progress</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="Delete stage ${esc(s.name)}">${ic('x')}</button></header>
+     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}"><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Complete"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Task"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Delete ${esc(t.text)}">${ic('x')}</button></div>`).join('')}
+     <input class="add" placeholder="Add task" data-add="${s.id}" data-p="${p.id}" aria-label="Add task to ${esc(s.name)}"></section>`}).join('')}
+   <button class="newcol" data-act="addStage" data-p="${p.id}">${ic('plus')}New Stage</button></div>
+  <section class="panel" style="${cvar(p)}"><h2>Notes</h2><textarea class="note" data-f="notes" data-p="${p.id}" aria-label="Notes">${esc(p.notes||'')}</textarea></section>
+  <div><button class="btn ghost sm" data-act="delProject" data-p="${p.id}">Delete Project</button></div>`}
 
-function viewLinks(){const groups={};S.links.forEach(l=>(groups[l.group||'未分類']=groups[l.group||'未分類']||[]).push(l));
-  return `<header class="mast"><div><p class="kick">常用的網站，一點就開</p><h1>收藏網站</h1></div><button class="btn" data-act="newLink">${ic('plus')}新增收藏</button></header>
-  ${S.links.length?Object.keys(groups).map(g=>`<section class="panel"><h2>${esc(g)} <small>${groups[g].length} 個</small></h2><div class="grid">${groups[g].map(linkRow).join('')}</div></section>`).join('')
-   :`<section class="panel">${emptyBox('bookmark','還沒有收藏','把常用的網站放進來，之後不用再翻書籤。')}</section>`}
-  <div><button class="btn ghost" data-act="newLink">${ic('plus')}新增收藏</button></div>`}
+function viewLinks(){const groups={};S.links.forEach(l=>(groups[l.group||'Ungrouped']=groups[l.group||'Ungrouped']||[]).push(l));
+  return `<header class="mast"><div><h1>Bookmarks</h1></div><button class="btn" data-act="newLink">${ic('plus')}New Bookmark</button></header>
+  ${S.links.length?Object.keys(groups).map(g=>`<section class="panel"><h2>${esc(g)} <small>${groups[g].length}</small></h2><div class="grid">${groups[g].map(linkRow).join('')}</div></section>`).join('')
+   :`<section class="panel">${emptyBox('bookmark','No bookmarks')}</section>`}`}
 
 function scriptCode(tok){return `const TOKEN = '${(tok||'在這裡填同步密碼').replace(/['\\\\]/g,'')}';
 const FILE = 'my-dashboard-data.json';
@@ -424,36 +494,35 @@ function doPost(e) {
   return out({ ok: false, error: 'unknown action' });
 }`}
 function viewSettings(){
-  return `<header class="mast"><div><p class="kick" id="synclab">${syncLabel()}</p><h1>設定與同步</h1></div></header>
-  <section class="panel settings"><h2>風格</h2><div class="body"><div class="themes">${[['editorial','編輯','白底、粗標題、細線',['#FFFFFF','#121322','#8F5CF0']],['meadow','草地','淺藍綠底、圓角卡片',['#F5FAFF','#145D24','#B2EE61']],['voyage','旅行','淡紫灰底、黑色膠囊按鈕',['#EEF1F8','#111216','#8B7FE8']]].map(([k,n,dsc,cs])=>`<button data-act="theme" data-v="${k}" aria-pressed="${(document.documentElement.dataset.theme||'editorial')===k}"><i>${cs.map(c=>`<b style="background:${c}"></b>`).join('')}</i>${n}<small>${dsc}</small></button>`).join('')}</div><p class="kick" style="color:var(--muted);font-size:13px">風格只記在這台裝置，手機和電腦可以選不一樣的。</p></div></section>
-  <section class="panel settings"><h2>雲端同步（Google 雲端硬碟）</h2><div class="body">
-   <p>資料會存成你 Google 雲端硬碟裡的一個檔案 <b>my-dashboard-data.json</b>，手機和電腦讀寫同一份。設定一次就好：</p>
-   <div class="fld"><label for="tok">1. 自己取一組同步密碼</label><input class="in" id="tok" value="${esc(CFG.token)}" placeholder="例如一串你記得住的英數字" autocomplete="off"><span class="msg">只用來保護這份資料，不要用你其他帳號的密碼。</span></div>
-   <div class="lab">2. 到 script.google.com 建一個新專案，把下面的程式碼整段貼上</div>
+  return `<header class="mast"><div><h1>Settings</h1></div></header>
+  <section class="panel settings"><h2>Style</h2><div class="body"><div class="themes">${[['editorial','Editorial',['#FFFFFF','#121322','#8F5CF0']],['meadow','Meadow',['#F5FAFF','#145D24','#B2EE61']],['voyage','Voyage',['#EEF1F8','#111216','#8B7FE8']]].map(([k,n,cs])=>`<button data-act="theme" data-v="${k}" aria-pressed="${TH()===k}"><i>${cs.map(c=>`<b style="background:${c}"></b>`).join('')}</i>${n}</button>`).join('')}</div></div></section>
+  <section class="panel settings"><h2>Sync <small id="synclab">${syncLabel()}</small></h2><div class="body">
+   <div class="fld"><label for="tok">Passphrase</label><input class="in" id="tok" value="${esc(CFG.token)}" autocomplete="off"><span class="msg"></span></div>
+   <div class="lab">Apps Script</div>
    <pre class="code" id="code">${esc(scriptCode(CFG.token))}</pre>
-   <div><button class="btn sm ghost" data-act="copyScript">複製程式碼</button></div>
-   <ol class="steps" start="3"><li>右上角「部署」→「新增部署作業」→ 類型選「網頁應用程式」。</li><li>「執行身分」選自己，「誰可以存取」選「所有人」，按部署並同意授權。</li><li>把產生的網址（結尾是 /exec）貼到下面。</li></ol>
-   <div class="fld" id="f-url"><label for="url">網頁應用程式網址</label><input class="in" id="url" value="${esc(CFG.url)}" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"><span class="msg">其他裝置只要填同一組密碼和網址就會同步。</span></div>
-   <div class="acts2"><button class="btn" data-act="saveSync">儲存並同步</button>${CFG.url?'<button class="btn ghost" data-act="offSync">關閉同步</button>':''}</div></div>
+   <div><button class="btn sm ghost" data-act="copyScript">Copy</button></div>
+   <ol class="steps"><li>script.google.com 建立新專案，貼上程式碼。</li><li>部署 → 新增部署作業 → 網頁應用程式。</li><li>執行身分選自己，存取權選所有人。</li><li>將 /exec 網址貼到下方。</li></ol>
+   <div class="fld" id="f-url"><label for="url">Web App URL</label><input class="in" id="url" value="${esc(CFG.url)}" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"><span class="msg"></span></div>
+   <div class="acts2"><button class="btn" data-act="saveSync">Save &amp; Sync</button>${CFG.url?'<button class="btn ghost" data-act="offSync">Turn Off</button>':''}</div></div>
   </section>
-  <section class="panel settings"><h2>備份</h2><div class="body"><p>把全部資料存成一個檔案，或從檔案還原。</p>
-   <div class="acts2"><button class="btn ghost" data-act="export">下載備份檔</button><label class="btn ghost" style="cursor:pointer">從備份檔還原<input type="file" id="imp" accept="application/json,.json" hidden></label></div></div></section>
-  <section class="panel settings"><h2>清空資料</h2><div class="body"><p>刪除這台裝置上所有專案和收藏，從空白開始。</p>
-   <div><button class="btn ghost" data-act="clearAll">清空全部資料</button></div></div></section>`}
+  <section class="panel settings"><h2>Backup</h2><div class="body">
+   <div class="acts2"><button class="btn ghost" data-act="export">Export</button><label class="btn ghost" style="cursor:pointer">Import<input type="file" id="imp" accept="application/json,.json" hidden></label></div></div></section>
+  <section class="panel settings"><h2>Reset</h2><div class="body">
+   <div><button class="btn ghost" data-act="clearAll">Clear All Data</button></div></div></section>`}
 
 function render(){const r=route();renderSide();
   $('#main').innerHTML=r.v==='project'?viewProject(P(r.id)):r.v==='links'?viewLinks():r.v==='settings'?viewSettings():viewHome();
-  document.title=(r.v==='project'?P(r.id).name+'｜':'')+'我的工作台'}
+  document.title=(r.v==='project'?P(r.id).name+' · ':'')+"R1's Dashboard"}
 
 /* ---- toast / modal ---- */
 function toast(text,kind,undo){const el=document.createElement('div');el.className='toast'+(kind==='bad'?' bad':'');el.setAttribute('role','status');
-  el.innerHTML=`<span>${esc(text)}</span>`+(undo?'<button type="button">復原</button>':'');
-  if(undo) el.querySelector('button').addEventListener('click',()=>{S=JSON.parse(undo);save();render();el.remove();toast('已復原')});
+  el.innerHTML=`<span>${esc(text)}</span>`+(undo?'<button type="button">Undo</button>':'');
+  if(undo) el.querySelector('button').addEventListener('click',()=>{S=JSON.parse(undo);save();render();el.remove();toast('Restored')});
   $('#toasts').appendChild(el);setTimeout(()=>el.remove(),undo?6000:2600)}
 let lastFocus=null;
 function closeModal(){$('#modal').innerHTML='';lastFocus&&lastFocus.focus&&lastFocus.focus()}
 function modal(title,body,okText,onOk,danger){lastFocus=document.activeElement;
-  $('#modal').innerHTML=`<div class="ovl"><form class="modal solid" role="dialog" aria-modal="true" aria-label="${esc(title)}" novalidate><h2>${esc(title)}</h2>${body}<div class="acts"><button type="button" class="btn ghost" data-close>取消</button><button type="submit" class="btn${danger?' danger':''}">${esc(okText)}</button></div></form></div>`;
+  $('#modal').innerHTML=`<div class="ovl"><form class="modal solid" role="dialog" aria-modal="true" aria-label="${esc(title)}" novalidate><h2>${esc(title)}</h2>${body}<div class="acts"><button type="button" class="btn ghost" data-close>Cancel</button><button type="submit" class="btn${danger?' danger':''}">${esc(okText)}</button></div></form></div>`;
   const f=$('#modal form');const first=f.querySelector('input:not([type=radio]),textarea,button');first&&first.focus();
   f.addEventListener('submit',e=>{e.preventDefault();if(onOk(f)!==false)closeModal()});
   $('#modal .ovl').addEventListener('click',e=>{if(e.target.classList.contains('ovl')||e.target.closest('[data-close]'))closeModal()})}
@@ -461,30 +530,30 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#modal').firstCh
 const need=(f,name,msg)=>{const i=f.elements[name],w=i.closest('.fld');if(!i.value.trim()){w.classList.add('err');w.querySelector('.msg').textContent=msg;i.focus();return false}w.classList.remove('err');return true};
 
 function projectForm(p){const e=!!p;
-  modal(e?'編輯專案':'新增專案',`
-   <div class="fld"><label for="pn">專案名稱</label><input class="in" id="pn" name="name" value="${esc(e?p.name:'')}" placeholder="例如：個人作品集" maxlength="40"><span class="msg"></span></div>
-   <div class="fld"><label for="pd">一句話說明（可不填）</label><input class="in" id="pd" name="desc" value="${esc(e?p.desc:'')}" maxlength="80"></div>
-   <div class="fld"><label for="pl">相關網址（可不填）</label><input class="in" id="pl" name="link" value="${esc(e?p.link:'')}" placeholder="https://" inputmode="url"><span class="msg"></span></div>
-   <div><div class="lab">圖示</div><div class="pick">${PICK.map((x,i)=>`<label><input type="radio" name="icon" value="${x}"${(e?p.icon===x:i===0)?' checked':''}><span>${ic(x)}</span></label>`).join('')}</div></div>
-   <div><div class="lab">顏色</div><div class="pick">${COLORS.map((c,i)=>`<label><input type="radio" name="color" value="${i}"${(e?p.color===i:i===S.projects.length%COLORS.length)?' checked':''}><span class="c" style="--c:${c[0]}" title="顏色 ${i+1}"></span></label>`).join('')}</div></div>
-   ${e?'':`<div><div class="lab">階段怎麼分</div><div class="pick"><label><input type="radio" name="tpl" value="one" checked><span class="w">一張清單就好</span></label><label><input type="radio" name="tpl" value="web"><span class="w">構想 → 製作 → 上線</span></label><label><input type="radio" name="tpl" value="learn"><span class="w">入門 → 練習 → 做作品</span></label></div></div>`}`,
-   e?'儲存':'建立專案',f=>{
-    if(!need(f,'name','請輸入專案名稱'))return false;
+  modal(e?'Edit Project':'New Project',`
+   <div class="fld"><label for="pn">Name</label><input class="in" id="pn" name="name" value="${esc(e?p.name:'')}" maxlength="40"><span class="msg"></span></div>
+   <div class="fld"><label for="pd">Description</label><input class="in" id="pd" name="desc" value="${esc(e?p.desc:'')}" maxlength="80"></div>
+   <div class="fld"><label for="pl">URL</label><input class="in" id="pl" name="link" value="${esc(e?p.link:'')}" placeholder="https://" inputmode="url"><span class="msg"></span></div>
+   <div><div class="lab">Icon</div><div class="pick">${PICK.map((x,i)=>`<label><input type="radio" name="icon" value="${x}"${(e?p.icon===x:i===0)?' checked':''}><span>${ic(x)}</span></label>`).join('')}</div></div>
+   <div><div class="lab">Color</div><div class="pick">${COLORS.map((c,i)=>`<label><input type="radio" name="color" value="${i}"${(e?p.color===i:i===S.projects.length%COLORS.length)?' checked':''}><span class="c" style="--c:${c[0]}" title="Color ${i+1}"></span></label>`).join('')}</div></div>
+   ${e?'':`<div><div class="lab">Template</div><div class="pick"><label><input type="radio" name="tpl" value="one" checked><span class="w">Single List</span></label><label><input type="radio" name="tpl" value="web"><span class="w">構想 → 製作 → 上線</span></label><label><input type="radio" name="tpl" value="learn"><span class="w">入門 → 練習 → 做作品</span></label></div></div>`}`,
+   e?'Save':'Create',f=>{
+    if(!need(f,'name','Name is required'))return false;
     let link=f.elements.link.value.trim();if(link&&!/^https?:\/\//i.test(link))link='https://'+link;
     const v={name:f.elements.name.value.trim(),desc:f.elements.desc.value.trim(),link,icon:f.elements.icon.value||(e?p.icon:'star'),color:+f.elements.color.value};
-    if(e){Object.assign(p,v);save();render();toast('已儲存')}
-    else{const np=Object.assign({id:uid(),notes:'',stages:TEMPLATES[f.elements.tpl.value].map(n=>({id:uid(),name:n,todos:[]}))},v);S.projects.push(np);save();go('p/'+np.id);render();toast('已建立「'+np.name+'」')}})}
+    if(e){Object.assign(p,v);save();render();toast('Saved')}
+    else{const np=Object.assign({id:uid(),notes:'',stages:TEMPLATES[f.elements.tpl.value].map(n=>({id:uid(),name:n,todos:[]}))},v);S.projects.push(np);save();go('p/'+np.id);render();toast('Created')}})}
 function linkForm(l){const e=!!l,groups=[...new Set(S.links.map(x=>x.group).filter(Boolean))];
-  modal(e?'編輯收藏':'新增收藏',`
-   <div class="fld"><label for="lu">網址</label><input class="in" id="lu" name="url" value="${esc(e?l.url:'')}" placeholder="https://" inputmode="url"><span class="msg"></span></div>
-   <div class="fld"><label for="lt">名稱</label><input class="in" id="lt" name="title" value="${esc(e?l.title:'')}" maxlength="30" placeholder="不填就用網域名稱"><span class="msg"></span></div>
-   <div class="fld"><label for="lm">圖示上的字</label><input class="in" id="lm" name="mark" value="${esc(e?l.mark||'':'')}" maxlength="2" placeholder="不填就用名稱的第一個字"><span class="msg">最多 2 個字，例如「推」或「GH」。</span></div>
-   <div class="fld"><label for="lg">分類</label><input class="in" id="lg" name="group" value="${esc(e?l.group:'')}" list="lgs" maxlength="20" placeholder="例如：設計靈感"><datalist id="lgs">${groups.map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>`,
-   e?'儲存':'加入收藏',f=>{if(!need(f,'url','請輸入網址'))return false;
+  modal(e?'Edit Bookmark':'New Bookmark',`
+   <div class="fld"><label for="lu">URL</label><input class="in" id="lu" name="url" value="${esc(e?l.url:'')}" placeholder="https://" inputmode="url"><span class="msg"></span></div>
+   <div class="fld"><label for="lt">Name</label><input class="in" id="lt" name="title" value="${esc(e?l.title:'')}" maxlength="30"><span class="msg"></span></div>
+   <div class="fld"><label for="lm">Label</label><input class="in" id="lm" name="mark" value="${esc(e?l.mark||'':'')}" maxlength="2"><span class="msg"></span></div>
+   <div class="fld"><label for="lg">Group</label><input class="in" id="lg" name="group" value="${esc(e?l.group:'')}" list="lgs" maxlength="20"><datalist id="lgs">${groups.map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>`,
+   e?'Save':'Add',f=>{if(!need(f,'url','URL is required'))return false;
     let url=f.elements.url.value.trim();if(!/^https?:\/\//i.test(url))url='https://'+url;
-    try{new URL(url)}catch(err){const w=f.elements.url.closest('.fld');w.classList.add('err');w.querySelector('.msg').textContent='網址格式不對，例如 https://example.com';return false}
-    const v={url,title:f.elements.title.value.trim()||host(url),mark:f.elements.mark.value.trim(),group:f.elements.group.value.trim()||'未分類'};
-    if(e)Object.assign(l,v);else S.links.push(Object.assign({id:uid()},v));save();render();toast(e?'已儲存':'已加入收藏')})}
+    try{new URL(url)}catch(err){const w=f.elements.url.closest('.fld');w.classList.add('err');w.querySelector('.msg').textContent='Invalid URL';return false}
+    const v={url,title:f.elements.title.value.trim()||host(url),mark:f.elements.mark.value.trim(),group:f.elements.group.value.trim()||'Ungrouped'};
+    if(e)Object.assign(l,v);else S.links.push(Object.assign({id:uid()},v));save();render();toast(e?'Saved':'Added')})}
 function confirmBox(title,text,ok,fn){modal(title,`<p>${esc(text)}</p>`,ok,()=>{fn()},true)}
 
 /* ---- actions ---- */
@@ -493,32 +562,32 @@ document.addEventListener('click',e=>{
   const a=e.target.closest('[data-act]');
   if(a){const d=a.dataset,p=d.p&&P(d.p),s=p&&d.s&&p.stages.find(x=>x.id===d.s),snap=JSON.stringify(S);
     switch(d.act){
-      case 'toggle':{const t=s.todos.find(x=>x.id===d.t);t.done=a.checked;save();const now=pstat(p);render();if(a.checked&&now.t&&now.d===now.t)toast('「'+p.name+'」全部完成');return}
-      case 'delTodo':s.todos=s.todos.filter(x=>x.id!==d.t);save();render();toast('已刪除待辦',null,snap);return
-      case 'addStage':p.stages.push({id:uid(),name:'新階段',todos:[]});save();render();{const ins=document.querySelectorAll('[data-f=stageName]');const i=ins[ins.length-1];i&&(i.focus(),i.select())}return
-      case 'delStage':{const del=()=>{p.stages=p.stages.filter(x=>x.id!==s.id);save();render();toast('已刪除階段',null,snap)};s.todos.length?confirmBox('刪除「'+s.name+'」？','裡面的 '+s.todos.length+' 個待辦會一起刪除。','刪除',del):del();return}
-      case 'delProject':confirmBox('刪除「'+p.name+'」？','專案裡的階段、待辦和筆記都會刪除。刪除後幾秒內還能復原。','刪除專案',()=>{S.projects=S.projects.filter(x=>x.id!==p.id);save();go('');render();toast('已刪除專案',null,snap)});return
+      case 'toggle':{const t=s.todos.find(x=>x.id===d.t);t.done=a.checked;save();const now=pstat(p);render();if(a.checked&&now.t&&now.d===now.t)toast(p.name+' completed');return}
+      case 'delTodo':s.todos=s.todos.filter(x=>x.id!==d.t);save();render();toast('Task deleted',null,snap);return
+      case 'addStage':p.stages.push({id:uid(),name:'New Stage',todos:[]});save();render();{const ins=document.querySelectorAll('[data-f=stageName]');const i=ins[ins.length-1];i&&(i.focus(),i.select())}return
+      case 'delStage':{const del=()=>{p.stages=p.stages.filter(x=>x.id!==s.id);save();render();toast('Stage deleted',null,snap)};s.todos.length?confirmBox('Delete "'+s.name+'"?',s.todos.length+' tasks will be deleted.','Delete',del):del();return}
+      case 'delProject':confirmBox('Delete "'+p.name+'"?','Stages, tasks and notes will be deleted.','Delete',()=>{S.projects=S.projects.filter(x=>x.id!==p.id);save();go('');render();toast('Project deleted',null,snap)});return
       case 'editProject':projectForm(p);return
       case 'newProject':projectForm();return
       case 'newLink':linkForm();return
       case 'editLink':e.preventDefault();linkForm(S.links.find(x=>x.id===d.id));return
       case 'theme':document.documentElement.dataset.theme=d.v;try{localStorage.setItem('dash-theme',d.v)}catch(err){}render();return
-      case 'delLink':e.preventDefault();S.links=S.links.filter(x=>x.id!==d.id);save();render();toast('已移除收藏',null,snap);return
-      case 'clearAll':confirmBox('清空全部資料？','所有專案、待辦、筆記和收藏都會刪除。刪除後幾秒內還能復原。','全部清空',()=>{S.projects=[];S.links=[];save();render();toast('已清空',null,snap)});return
-      case 'export':{const u=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));const l=document.createElement('a');l.href=u;l.download='my-dashboard-backup.json';l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('已下載備份檔');return}
-      case 'copyScript':{const t=scriptCode($('#tok').value.trim());const ok=()=>toast('已複製程式碼');try{navigator.clipboard.writeText(t).then(ok,()=>toast('複製失敗，請手動選取程式碼','bad'))}catch(err){toast('複製失敗，請手動選取程式碼','bad')}return}
+      case 'delLink':e.preventDefault();S.links=S.links.filter(x=>x.id!==d.id);save();render();toast('Bookmark removed',null,snap);return
+      case 'clearAll':confirmBox('Clear all data?','All projects, tasks, notes and bookmarks will be deleted.','Clear',()=>{S.projects=[];S.links=[];save();render();toast('Cleared',null,snap)});return
+      case 'export':{const u=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));const l=document.createElement('a');l.href=u;l.download='my-dashboard-backup.json';l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('Backup exported');return}
+      case 'copyScript':{const t=scriptCode($('#tok').value.trim());const ok=()=>toast('Copied');try{navigator.clipboard.writeText(t).then(ok,()=>toast('Copy failed','bad'))}catch(err){toast('Copy failed','bad')}return}
       case 'saveSync':{const url=$('#url').value.trim(),tok=$('#tok').value.trim(),w=$('#f-url');
-        if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){w.classList.add('err');w.querySelector('.msg').textContent='網址要是 https://script.google.com/ 開頭、/exec 結尾';return}
-        if(!tok){toast('請先填同步密碼','bad');$('#tok').focus();return}
+        if(!/^https:\/\/script\.google\.com\/.+\/exec$/.test(url)){w.classList.add('err');w.querySelector('.msg').textContent='Must start with https://script.google.com/ and end with /exec';return}
+        if(!tok){toast('Passphrase is required','bad');$('#tok').focus();return}
         CFG={url,token:tok};try{localStorage.setItem(LSC,JSON.stringify(CFG))}catch(err){}pull(true);return}
-      case 'offSync':CFG={url:'',token:''};try{localStorage.removeItem(LSC)}catch(err){}syncState='off';render();toast('已關閉同步，資料留在這台裝置');return
+      case 'offSync':CFG={url:'',token:''};try{localStorage.removeItem(LSC)}catch(err){}syncState='off';render();toast('Sync off');return
     }}
   if(g){if(e.target.closest('a.row'))return;go(g.dataset.go)}
 });
 document.addEventListener('change',e=>{const i=e.target,d=i.dataset;
-  if(i.id==='imp'&&i.files[0]){const fr=new FileReader();fr.onload=()=>{try{const j=JSON.parse(fr.result);if(!Array.isArray(j.projects)||!Array.isArray(j.links))throw 0;const snap=JSON.stringify(S);j.projects.forEach(p=>{if(!p.icon)p.icon='star'});S=j;save();render();toast('已從備份還原',null,snap)}catch(err){toast('這個檔案不是工作台的備份檔','bad')}};fr.readAsText(i.files[0]);return}
+  if(i.id==='imp'&&i.files[0]){const fr=new FileReader();fr.onload=()=>{try{const j=JSON.parse(fr.result);if(!Array.isArray(j.projects)||!Array.isArray(j.links))throw 0;const snap=JSON.stringify(S);j.projects.forEach(p=>{if(!p.icon)p.icon='star'});S=j;save();render();toast('Imported',null,snap)}catch(err){toast('Not a valid backup file','bad')}};fr.readAsText(i.files[0]);return}
   if(!d.f)return;const p=P(d.p);if(!p)return;const s=d.s&&p.stages.find(x=>x.id===d.s);
-  if(d.f==='stageName'){s.name=i.value.trim()||'未命名';i.value=s.name}
+  if(d.f==='stageName'){s.name=i.value.trim()||'Untitled';i.value=s.name}
   else if(d.f==='todoText'){const t=s.todos.find(x=>x.id===d.t);if(!i.value.trim()){i.value=t.text;return}t.text=i.value.trim()}
   else if(d.f==='notes'){p.notes=i.value}
   save();renderSide()});
@@ -533,10 +602,10 @@ function setSync(st){syncState=st;if(st==='ok')syncAt=Date.now();renderSide();co
 async function push(){if(!CFG.url)return;setSync('busy');try{await api({action:'set',data:S});setSync('ok')}catch(e){setSync('bad')}}
 async function pull(loud){if(!CFG.url)return;setSync('busy');
   try{const j=await api({action:'get'});
-    if(j.data&&j.updatedAt>S.updatedAt){S=j.data;S.projects.forEach(p=>{if(!p.icon)p.icon='star'});persist();setSync('ok');render();loud&&toast('已載入雲端上較新的資料')}
-    else if(S.updatedAt>(j.updatedAt||0)||!j.data){await api({action:'set',data:S});setSync('ok');if(loud){render();toast('同步完成')}}
-    else{setSync('ok');if(loud){render();toast('同步完成')}}
-  }catch(e){setSync('bad');if(loud){render();toast(e.message==='unauthorized'?'同步密碼和腳本裡的不一樣':'連不上同步網址，請檢查部署設定','bad')}}}
+    if(j.data&&j.updatedAt>S.updatedAt){S=j.data;S.projects.forEach(p=>{if(!p.icon)p.icon='star'});persist();setSync('ok');render();loud&&toast('Loaded newer data')}
+    else if(S.updatedAt>(j.updatedAt||0)||!j.data){await api({action:'set',data:S});setSync('ok');if(loud){render();toast('Synced')}}
+    else{setSync('ok');if(loud){render();toast('Synced')}}
+  }catch(e){setSync('bad');if(loud){render();toast(e.message==='unauthorized'?'Passphrase mismatch':'Cannot reach sync URL','bad')}}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 
 render();pull();
