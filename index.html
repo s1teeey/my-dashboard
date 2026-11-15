@@ -168,8 +168,25 @@ body.drag .board{scroll-snap-type:none}
 .empty{text-align:center;padding:28px 12px;color:var(--on-mute);display:flex;flex-direction:column;gap:8px;align-items:center}
 .empty .e{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--field);color:var(--on-mute)}
 .empty b{color:var(--on)}
-textarea.note{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff;color:var(--ink);resize:vertical;line-height:1.8;margin-top:14px}
-textarea.note:focus{outline:0;border-color:var(--c,var(--accent));box-shadow:0 0 0 2px var(--cs,var(--accent-soft))}
+.duo2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.rtebar{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px}
+.rtebar button{min-width:34px;height:32px;padding:0 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:13.5px;font-weight:700;transition:background var(--dur),border-color var(--dur)}
+.rtebar button:hover{background:var(--field);border-color:var(--c,var(--accent))}
+.rtebar i{font-style:italic}
+.hl,.rte [style*=background]{background:#FFE27A!important;color:#121322;border-radius:3px;padding:0 2px}
+.rte{min-height:150px;border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff;color:var(--ink);line-height:1.8;margin-top:10px;overflow-wrap:anywhere}
+.rte:focus{outline:0;border-color:var(--c,var(--accent));box-shadow:0 0 0 2px var(--cs,var(--accent-soft))}
+.rte i,.rte em{font-style:italic}
+.rte h2{font-size:22px;line-height:1.4;margin:.3em 0;font-weight:var(--hw)}
+.rte h3{font-size:18px;line-height:1.5;margin:.3em 0;font-weight:var(--hw)}
+.rte h4{font-size:15.5px;line-height:1.6;margin:.3em 0;font-weight:var(--hw)}
+.tpanel>h2{align-items:center}
+.tpanel>h2 small{margin-right:auto}
+.tpanel>h2 .x{opacity:1}
+.ttitle{width:100%;border:0;background:none;resize:none;overflow:hidden;font-size:17px;font-weight:var(--hw);line-height:1.5;padding:6px;margin-top:10px;border-radius:8px;color:var(--ink)}
+.ttitle:hover{background:var(--field)}
+.ttitle:focus{outline:0;background:#fff;box-shadow:0 0 0 2px var(--c,var(--accent))}
+.todo.sel{border-color:var(--c,var(--accent));box-shadow:0 0 0 1px var(--c,var(--accent))}
 .body{display:flex;flex-direction:column;gap:14px;padding-top:16px}
 
 /* ---- forms / modal / toast ---- */
@@ -317,6 +334,9 @@ html[data-theme=voyage] .tag,html[data-theme=meadow] .tag{padding:2px 10px}
   .inl:hover{background:none}
   .x{opacity:1}
   .grid{grid-template-columns:minmax(0,1fr)}
+  .duo2{grid-template-columns:minmax(0,1fr)}
+  .duo2 .tpanel{order:-1}
+  .duo2 .tpanel.none{display:none}
   .mback{display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:35;margin:calc(-22px - env(safe-area-inset-top,0px)) -16px 0;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;background:var(--page);background-attachment:fixed;border-bottom:1px solid var(--line)}
   .mback .ib{width:44px;height:44px;background:var(--chip);box-shadow:var(--shadow)}
   .mback b{font-weight:var(--hw);font-size:16px}
@@ -475,11 +495,33 @@ function viewProject(p){const st=pstat(p),cur=curStage(p);
   <section class="panel" style="${cvar(p)}"><h2>Progress</h2><div class="body">${track(p,true)}</div></section>
   <div class="board" data-p="${p.id}" style="${cvar(p)}">
    ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col${s===cur?' cur':''}" data-s="${s.id}"><header><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="Stage name">${s===cur?'<span class="tag">In Progress</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="Delete stage ${esc(s.name)}">${ic('x')}</button></header>
-     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}" data-t="${t.id}"><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Complete"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Task"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Delete ${esc(t.text)}">${ic('x')}</button></div>`).join('')}
+     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}${SEL===t.id?' sel':''}" data-t="${t.id}"><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Complete"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Task"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Delete ${esc(t.text)}">${ic('x')}</button></div>`).join('')}
      <input class="add" placeholder="Add task" data-add="${s.id}" data-p="${p.id}" aria-label="Add task to ${esc(s.name)}"></section>`}).join('')}
    <button class="newcol" data-act="addStage" data-p="${p.id}">${ic('plus')}New Stage</button></div>
-  <section class="panel" style="${cvar(p)}"><h2>Notes</h2><textarea class="note" data-f="notes" data-p="${p.id}" aria-label="Notes">${esc(p.notes||'')}</textarea></section>
+  <div class="duo2" style="${cvar(p)}"><section class="panel"><h2>Notes</h2>${rteBar()}<div class="rte" contenteditable="true" data-rte="notes" data-p="${p.id}" aria-label="Notes">${clean(p.notes)}</div></section>${taskPanel(p)}</div>
   <div><button class="btn ghost sm" data-act="delProject" data-p="${p.id}">Delete Project</button></div>`}
+
+let SEL=null;
+const OKTAG={B:1,I:1,U:1,S:1,STRIKE:1,STRONG:1,EM:1,MARK:1,H2:1,H3:1,H4:1,P:1,DIV:1,BR:1,SPAN:1,FONT:1};
+function clean(h){h=h||'';if(!/<(br|div|b|i|u|s|mark|h[234]|span|p|strike|strong|em|font)\b/i.test(h))return esc(h).replace(/\n/g,'<br>');
+  const d=new DOMParser().parseFromString('<body>'+h,'text/html');
+  (function walk(n){[...n.childNodes].forEach(c=>{if(c.nodeType===8){c.remove();return}if(c.nodeType!==1)return;
+    if(/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|SVG|MATH|LINK|META)$/i.test(c.tagName)){c.remove();return}
+    walk(c);if(!OKTAG[c.tagName]){c.replaceWith(...c.childNodes);return}
+    const hl=c.className==='hl'||/background(-color)?:/i.test(c.getAttribute('style')||'')&&!/transparent|rgba\(0, 0, 0, 0\)/.test(c.getAttribute('style'));
+    [...c.attributes].forEach(a=>c.removeAttribute(a.name));if(hl)c.className='hl'})})(d.body);
+  return d.body.innerHTML}
+function rteBar(){return `<div class="rtebar" role="toolbar" aria-label="Formatting">${[['bold','<b>B</b>','Bold'],['italic','<i>I</i>','Italic'],['underline','<u>U</u>','Underline'],['strikeThrough','<s>S</s>','Strikethrough'],['hl','<span class="hl">A</span>','Highlight'],['H2','H2','Heading 2'],['H3','H3','Heading 3'],['H4','H4','Heading 4']].map(([c,l,t])=>`<button type="button" data-cmd="${c}" title="${t}" aria-label="${t}">${l}</button>`).join('')}</div>`}
+function findTask(p){for(const st of p.stages){const t=st.todos.find(x=>x.id===SEL);if(t)return {s:st,t}}return null}
+function taskPanel(p){const f=SEL&&findTask(p);
+  if(!f)return `<section class="panel tpanel none" id="tp"><h2>Task</h2>${emptyBox('pen','No task selected')}</section>`;
+  return `<section class="panel tpanel" id="tp"><h2>Task <small>${esc(f.s.name)}</small><button class="x" data-act="closeTask" aria-label="Close">${ic('x')}</button></h2>
+   <textarea class="ttitle" rows="1" data-f="todoText" data-p="${p.id}" data-s="${f.s.id}" data-t="${f.t.id}" aria-label="Task">${esc(f.t.text)}</textarea>
+   ${rteBar()}<div class="rte" contenteditable="true" data-rte="task" data-p="${p.id}" data-t="${f.t.id}" aria-label="Task notes">${clean(f.t.note)}</div></section>`}
+function fitTitle(){const a=$('.ttitle');if(a){a.style.height='auto';a.style.height=a.scrollHeight+2+'px'}}
+function setSel(id,p){if(SEL===id)return;SEL=id;document.querySelectorAll('.todo.sel').forEach(x=>x.classList.remove('sel'));
+  const el=id&&document.querySelector('.todo[data-t="'+id+'"]');if(el)el.classList.add('sel');
+  const tp=$('#tp');if(tp&&p){tp.outerHTML=taskPanel(p);fitTitle()}}
 
 function viewLinks(){const groups={};S.links.forEach(l=>(groups[l.group||'Ungrouped']=groups[l.group||'Ungrouped']||[]).push(l));
   return `<header class="mast"><div><h1>Bookmarks</h1></div><button class="btn" data-act="newLink">${ic('plus')}New Bookmark</button></header>
@@ -532,7 +574,7 @@ function viewSettings(){
 
 function render(){const r=route();renderSide();
   $('#main').innerHTML=r.v==='project'?viewProject(P(r.id)):r.v==='links'?viewLinks():r.v==='settings'?viewSettings():viewHome();
-  document.title=(r.v==='project'?P(r.id).name+' · ':'')+"R1's Dashboard"}
+  document.title=(r.v==='project'?P(r.id).name+' · ':'')+"R1's Dashboard";fitTitle()}
 
 /* ---- toast / modal ---- */
 function toast(text,kind,undo){const el=document.createElement('div');el.className='toast'+(kind==='bad'?' bad':'');el.setAttribute('role','status');
@@ -579,6 +621,14 @@ function confirmBox(title,text,ok,fn){modal(title,`<p>${esc(text)}</p>`,ok,()=>{
 /* ---- actions ---- */
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]');
+  const cb=e.target.closest('.rtebar button');
+  if(cb){const r=cb.closest('.panel').querySelector('.rte'),c=cb.dataset.cmd,sel=getSelection();
+    if(!sel.rangeCount||!r.contains(sel.anchorNode))r.focus();
+    if(c==='hl'){let n=sel.anchorNode;n=n&&(n.nodeType===1?n:n.parentElement);const h=n&&n.closest('.hl,[style*=background]');
+      if(h&&r.contains(h)){if(h.tagName==='SPAN')h.replaceWith(...h.childNodes);else{h.removeAttribute('class');h.removeAttribute('style')}}else document.execCommand('hiliteColor',false,'#FFE27A')}
+    else if(/^H\d$/.test(c))document.execCommand('formatBlock',false,(document.queryCommandValue('formatBlock')||'').toLowerCase()===c.toLowerCase()?'div':c);
+    else document.execCommand(c);
+    r.dispatchEvent(new Event('input',{bubbles:true}));return}
   const a=e.target.closest('[data-act]');
   if(a){const d=a.dataset,p=d.p&&P(d.p),s=p&&d.s&&p.stages.find(x=>x.id===d.s),snap=JSON.stringify(S);
     switch(d.act){
@@ -587,6 +637,7 @@ document.addEventListener('click',e=>{
       case 'addStage':p.stages.push({id:uid(),name:'New Stage',todos:[]});save();render();{const ins=document.querySelectorAll('[data-f=stageName]');const i=ins[ins.length-1];i&&(i.focus(),i.select())}return
       case 'delStage':{const del=()=>{p.stages=p.stages.filter(x=>x.id!==s.id);save();render();toast('Stage deleted',null,snap)};s.todos.length?confirmBox('Delete "'+s.name+'"?',s.todos.length+' tasks will be deleted.','Delete',del):del();return}
       case 'delProject':confirmBox('Delete "'+p.name+'"?','Stages, tasks and notes will be deleted.','Delete',()=>{S.projects=S.projects.filter(x=>x.id!==p.id);save();go('');render();toast('Project deleted',null,snap)});return
+      case 'closeTask':{const r=route();setSel(null,P(r.id));return}
       case 'editProject':projectForm(p);return
       case 'newProject':projectForm();return
       case 'newLink':linkForm();return
@@ -612,8 +663,14 @@ document.addEventListener('change',e=>{const i=e.target,d=i.dataset;
   if(!d.f)return;const p=P(d.p);if(!p)return;const s=d.s&&p.stages.find(x=>x.id===d.s);
   if(d.f==='stageName'){s.name=i.value.trim()||'Untitled';i.value=s.name}
   else if(d.f==='todoText'){const t=s.todos.find(x=>x.id===d.t);if(!i.value.trim()){i.value=t.text;return}t.text=i.value.trim()}
-  else if(d.f==='notes'){p.notes=i.value}
+  if(i.classList.contains('ttitle')){const o=document.querySelector('.todo[data-t="'+d.t+'"] input.inl');if(o)o.value=i.value.trim()}
   save();renderSide()});
+const pickTask=e=>{const i=e.target;if(i.matches&&i.matches('.board .todo input.inl')){const p=P(i.dataset.p);if(p)setSel(i.dataset.t,p)}};
+document.addEventListener('focusin',pickTask);document.addEventListener('click',pickTask);
+document.addEventListener('mousedown',e=>{if(e.target.closest('.rtebar button'))e.preventDefault()});
+document.addEventListener('input',e=>{const r=e.target.closest&&e.target.closest('.rte');if(e.target.classList&&e.target.classList.contains('ttitle'))fitTitle();if(!r)return;const p=P(r.dataset.p);if(!p)return;
+  const h=r.textContent.trim()?clean(r.innerHTML):'';
+  if(r.dataset.rte==='notes')p.notes=h;else{for(const st of p.stages){const t=st.todos.find(x=>x.id===r.dataset.t);if(t)t.note=h}}save()});
 document.addEventListener('input',e=>{if(e.target.id==='tok'){const c=$('#code');if(c)c.textContent=scriptCode(e.target.value.trim())}});
 document.addEventListener('keydown',e=>{const i=e.target;
   if(e.key==='Enter'&&i.dataset&&i.dataset.add&&!e.isComposing){const v=i.value.trim();if(!v)return;const p=P(i.dataset.p),s=p.stages.find(x=>x.id===i.dataset.add);s.todos.push(T(v));save();render();const n=document.querySelector(`[data-add="${s.id}"]`);n&&n.focus()}
