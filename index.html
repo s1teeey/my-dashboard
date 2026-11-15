@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800;6..12,900&display=swap">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("dash-theme")||"editorial";document.documentElement.dataset.rail=localStorage.getItem("dash-rail")||""}catch(e){}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("dash-theme")||"editorial";document.documentElement.dataset.rail=localStorage.getItem("dash-rail")==="closed"?"closed":""}catch(e){}</script>
 <style>
 /* 電腦：白底、粗標題、細線分隔的編輯式版面（跟新約讀經本同一套）。手機：霧面玻璃卡片 + 底部浮動選單。 */
 :root{
@@ -40,8 +40,20 @@ h1,h2,h3,p{margin:0}
 
 /* ---- sidebar ---- */
 .side{position:sticky;top:0;height:100vh;height:100dvh;padding:20px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;border-right:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:10px;padding:4px 10px 18px;font-weight:var(--hw);font-size:17px}
+.brand{display:flex;align-items:center;gap:8px;padding:4px 10px 18px;font-weight:var(--hw);font-size:15.5px}
 .brand img{width:28px;height:28px;border-radius:7px}
+.brand .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.railt{margin-left:auto;width:30px;height:30px;border:0;border-radius:8px;background:none;color:var(--faint);display:grid;place-items:center;flex:none;transition:background var(--dur),color var(--dur)}
+.railt:hover{background:var(--soft);color:var(--ink)}
+.railt .ic{width:17px;height:17px}
+html[data-rail=closed] .brand{flex-direction:column;gap:8px}
+html[data-rail=closed] .railt{margin:0}
+html[data-theme=meadow] .railt{display:none}
+.sech{display:flex;align-items:center;gap:4px;border:0;background:none;padding:0;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit}
+.sech .ic{width:13px;height:13px;transition:transform var(--dur)}
+.sech[aria-expanded=false] .ic{transform:rotate(-90deg)}
+.sech:hover{color:var(--ink)}
+.side .pn.dragging{outline-offset:0}
 .nav{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px;border:0;border-radius:8px;background:none;font-weight:700;color:var(--muted);transition:background var(--dur),color var(--dur)}
 .nav:hover{background:var(--soft);color:var(--ink)}
 .nav[aria-current=page]{background:var(--nav-on);color:var(--ink);font-weight:var(--hw)}
@@ -173,7 +185,7 @@ body.drag .board{scroll-snap-type:none}
 .rtebar button{min-width:34px;height:32px;padding:0 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:13.5px;font-weight:700;transition:background var(--dur),border-color var(--dur)}
 .rtebar button:hover{background:var(--field);border-color:var(--c,var(--accent))}
 .rtebar i{font-style:italic}
-.hl,.rte [style*=background]{background:#FFE27A!important;color:#121322;border-radius:3px;padding:0 2px}
+.hl,.rte [style*=background]{background:linear-gradient(transparent 55%,#FFE27A 55%)!important;color:inherit;padding:0 1px}
 .rte{min-height:150px;border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff;color:var(--ink);line-height:1.8;margin-top:10px;overflow-wrap:anywhere}
 .rte:focus{outline:0;border-color:var(--c,var(--accent));box-shadow:0 0 0 2px var(--cs,var(--accent-soft))}
 .rte i,.rte em{font-style:italic}
@@ -200,6 +212,23 @@ body.drag .board{scroll-snap-type:none}
 .pick input{position:absolute;opacity:0;pointer-events:none}
 .pick span{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--soft);color:var(--muted);border:2px solid transparent;transition:border-color var(--dur),color var(--dur)}
 .pick span.c{background:var(--c);border-radius:50%;width:32px;height:32px;box-shadow:inset 0 0 0 3px #fff}
+.pick span.c.none{background:var(--field);box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 4px var(--line)}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 6px}
+.gchip{border:1px solid var(--line);background:var(--soft);border-radius:99px;padding:3px 12px;font-size:13px;font-weight:700;color:var(--on);transition:border-color var(--dur)}
+.gchip:hover{border-color:var(--accent)}
+.gh{display:flex;align-items:center;gap:6px}
+.addg{opacity:1}
+.qlinks{display:flex;flex-wrap:wrap;gap:8px}
+.ql{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:99px;background:var(--card);box-shadow:var(--shadow);font-weight:700;font-size:14px;color:var(--ink);text-decoration:none;border:1px solid var(--line);transition:border-color var(--dur)}
+.ql:hover{border-color:var(--accent)}
+.ql .av{width:26px;height:26px;font-size:12.5px;border-radius:50%}
+.ql.add2{padding:6px 14px;color:var(--muted);background:none;box-shadow:none;border-style:dashed}
+.ql.add2 .ic{width:15px;height:15px}
+.lpick{display:flex;flex-direction:column;gap:4px;max-height:50vh;overflow:auto;margin-top:6px}
+.lpick label{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;cursor:pointer}
+.lpick label:hover{background:var(--soft)}
+.lpick .tt{flex:1;font-weight:700}
+.lpick small{color:var(--faint);font-size:12.5px}
 .pick span.w{width:auto;padding:0 14px;font-size:13.5px;font-weight:800}
 .pick input:checked+span{border-color:var(--ink);color:var(--ink)}
 .pick input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
@@ -255,7 +284,6 @@ html[data-theme=voyage] .tag,html[data-theme=meadow] .tag{padding:2px 10px}
 .mast.hero .stats{gap:10px;flex-wrap:wrap;justify-content:center}
 .mast.hero .stats div{flex-direction:row;gap:8px;align-items:baseline;padding:8px 18px;border-radius:99px;background:#fff;box-shadow:var(--shadow)}
 .mast.hero .stats b{font-size:20px}
-.railt{display:none}
 .pinb.on{opacity:1;color:#C98A0B}
 .pinb.on .ic{fill:currentColor}
 .strip{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:stretch}
@@ -291,16 +319,15 @@ html[data-theme=voyage] .tag,html[data-theme=meadow] .tag{padding:2px 10px}
   html[data-theme=voyage] .app{grid-template-columns:272px minmax(0,1fr)}
   html[data-theme=voyage] main{max-width:none}
   html[data-theme=voyage] .side{top:12px;height:calc(100dvh - 24px);margin:12px 0 12px 12px;padding:16px 12px;gap:4px;background:#fff;border-radius:26px;box-shadow:var(--shadow)}
-  html[data-theme=voyage] .railt{display:flex}
   html[data-theme=voyage] .nav{border-radius:14px}
   html[data-theme=voyage] .nav[aria-current=page]{background:#111216;color:#fff}
   html[data-theme=voyage] .nav[aria-current=page] .pc,html[data-theme=voyage] .nav[aria-current=page] small{color:#fff}
-  html[data-theme=voyage]:not([data-rail=open]) .app{grid-template-columns:100px minmax(0,1fr)}
-  html[data-theme=voyage]:not([data-rail=open]) .side{padding:16px 0;align-items:center;gap:6px}
-  html[data-theme=voyage]:not([data-rail=open]) .side .nm,html[data-theme=voyage]:not([data-rail=open]) .side small,html[data-theme=voyage]:not([data-rail=open]) .side h2,html[data-theme=voyage]:not([data-rail=open]) .sync span{display:none}
-  html[data-theme=voyage]:not([data-rail=open]) .brand{padding:0 0 10px}
-  html[data-theme=voyage]:not([data-rail=open]) .brand img{width:36px;height:36px;border-radius:12px}
-  html[data-theme=voyage]:not([data-rail=open]) .nav{width:48px;height:48px;justify-content:center;padding:0;border-radius:16px;flex:none}
+  html:not([data-theme=meadow])[data-rail=closed] .app{grid-template-columns:100px minmax(0,1fr)}
+  html:not([data-theme=meadow])[data-rail=closed] .side{padding:16px 0;align-items:center;gap:6px}
+  html:not([data-theme=meadow])[data-rail=closed] .side .nm,html:not([data-theme=meadow])[data-rail=closed] .side small,html:not([data-theme=meadow])[data-rail=closed] .side h2,html:not([data-theme=meadow])[data-rail=closed] .sync span{display:none}
+  html:not([data-theme=meadow])[data-rail=closed] .brand{padding:0 0 10px}
+  html:not([data-theme=meadow])[data-rail=closed] .brand img{width:36px;height:36px;border-radius:12px}
+  html:not([data-theme=meadow])[data-rail=closed] .nav{width:48px;height:48px;justify-content:center;padding:0;border-radius:16px;flex:none}
   html[data-theme=voyage] .phead{background:var(--cs)}
   html[data-theme=voyage] .phead .pi{background:#fff}
   html[data-theme=voyage] .ring .bg{stroke:#fff}
@@ -377,6 +404,8 @@ const LS='dash-v1',LSC='dash-sync';
 /* 顏色：[主色, 淺底] */
 const COLORS=[['#8F5CF0','#F1EAFE'],['#0B7A69','#E0F3EF'],['#C8264A','#FBE8ED'],['#946000','#FBF1DA'],['#2563C9','#E6EEFB'],['#B8410E','#FBEDE5'],['#4B5568','#ECEEF2'],['#2F7D32','#E6F3E6']];
 const ICONS={
+ chev:'<path d="m6 9 6 6 6-6"/>',
+ link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
  grip:'<path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" stroke-width="2.6"/>',
  home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
  bookmark:'<path d="M6 3h12v18l-6-4-6 4z"/>',
@@ -440,14 +469,14 @@ window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});
 
 /* ---- views ---- */
 const TH=()=>document.documentElement.dataset.theme||'editorial';
+let PF=(()=>{try{return localStorage.getItem('dash-pf')==='1'}catch(e){return false}})();
 function renderSide(){const r=route();
   const cur=(v,id)=>r.v===v&&(id==null||r.id===id)?' aria-current="page"':'';
-  $('#side').innerHTML=`<div class="brand"><img src="icon-192.png" alt=""><span class="nm">R1's Dashboard</span></div>
-   <button class="nav railt" data-act="rail" title="Toggle Sidebar">${ic('panel')}<span class="nm">Collapse</span></button>
+  $('#side').innerHTML=`<div class="brand"><img src="icon-192.png" alt=""><span class="nm">R1's Dashboard</span><button class="railt" data-act="rail" title="Collapse Sidebar" aria-label="Collapse Sidebar">${ic('panel')}</button></div>
    <button class="nav" data-go=""${cur('home')} title="Home">${ic('home')}<span class="nm">Home</span></button>
    <button class="nav" data-go="links"${cur('links')} title="Bookmarks">${ic('bookmark')}<span class="nm">Bookmarks</span><small>${S.links.length}</small></button>
-   <h2>Projects</h2>
-   ${S.projects.map(p=>`<button class="nav pn" data-go="p/${p.id}"${cur('project',p.id)} style="${cvar(p)}" title="${esc(p.name)}"><span class="pc" style="display:grid">${ic(p.icon)}</span><span class="nm">${esc(p.name)}</span><small>${pstat(p).pct}%</small></button>`).join('')}
+   <h2><button class="sech" data-act="projFold" aria-expanded="${!PF}">Projects${ic('chev')}</button></h2>
+   ${PF?'':S.projects.map(p=>`<button class="nav pn" data-go="p/${p.id}"${cur('project',p.id)} style="${cvar(p)}" title="${esc(p.name)}"><span class="pc" style="display:grid">${ic(p.icon)}</span><span class="nm">${esc(p.name)}</span><small>${pstat(p).pct}%</small></button>`).join('')}
    <button class="nav pn" data-act="newProject" title="New Project">${ic('plus')}<span class="nm">New Project</span></button>
    <div class="sp"></div>
    ${syncState!=='off'?`<div class="sync ${({ok:'ok',bad:'bad',busy:'busy'})[syncState]||''}"><i></i><span>${syncLabel()}</span></div>`:''}
@@ -483,8 +512,9 @@ function viewHome(){
    </section>
    <aside class="rail">${nextPanel}<section class="panel">${bmHead}${hl.length?hl.map(linkRow).join(''):noBm}</section></aside>
   </div>`}
+const lstyle=l=>l.color!=null&&l.color>=0?` style="background:${COLORS[l.color%COLORS.length][1]};color:${COLORS[l.color%COLORS.length][0]}"`:'';
 const mark=l=>l.mark||(l.title.trim()[0]||'?').toUpperCase();
-function linkRow(l){return `<a class="row" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av">${esc(mark(l))}</span><span class="tt"><b>${esc(l.title)}</b><small>${esc(host(l.url))}</small></span><button class="x pinb${l.pin?' on':''}" data-act="pinLink" data-id="${l.id}" aria-label="${l.pin?'Unpin':'Pin'} ${esc(l.title)}" aria-pressed="${!!l.pin}">${ic('star')}</button><button class="x" data-act="editLink" data-id="${l.id}" aria-label="Edit ${esc(l.title)}">${ic('pen')}</button><button class="x" data-act="delLink" data-id="${l.id}" aria-label="Delete ${esc(l.title)}">${ic('x')}</button></a>`}
+function linkRow(l){return `<a class="row" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av"${lstyle(l)}>${esc(mark(l))}</span><span class="tt"><b>${esc(l.title)}</b><small>${esc(host(l.url))}</small></span><button class="x pinb${l.pin?' on':''}" data-act="pinLink" data-id="${l.id}" aria-label="${l.pin?'Unpin':'Pin'} ${esc(l.title)}" aria-pressed="${!!l.pin}">${ic('star')}</button><button class="x" data-act="editLink" data-id="${l.id}" aria-label="Edit ${esc(l.title)}">${ic('pen')}</button><button class="x" data-act="delLink" data-id="${l.id}" aria-label="Delete ${esc(l.title)}">${ic('x')}</button></a>`}
 
 function viewProject(p){const st=pstat(p),cur=curStage(p);
   return `<div class="mback"><button class="ib" data-go="" aria-label="Home">${ic('back')}</button><b>Project</b><button class="ib" data-act="editProject" data-p="${p.id}" aria-label="Edit">${ic('pen')}</button></div>
@@ -492,6 +522,7 @@ function viewProject(p){const st=pstat(p),cur=curStage(p);
     <div class="info"><h1>${esc(p.name)}</h1>${p.desc?`<p>${esc(p.desc)}</p>`:''}
      <div class="meta"><span class="pill on">${st.d} / ${st.t}</span>${cur?`<span class="pill">Current: ${esc(cur.name)}</span>`:st.t?'<span class="pill">Completed</span>':''}${p.link?`<a class="pill" href="${esc(p.link)}" target="_blank" rel="noopener">Open Site${ic('out')}</a>`:''}<button class="pill" data-act="editProject" data-p="${p.id}">${ic('pen')}Edit</button></div></div>
     ${ring(p,st)}</header>
+  <div class="qlinks">${(p.links||[]).map(id=>S.links.find(l=>l.id===id)).filter(Boolean).map(l=>`<a class="ql" href="${esc(l.url)}" target="_blank" rel="noopener"><span class="av"${lstyle(l)}>${esc(mark(l))}</span>${esc(l.title)}</a>`).join('')}<button class="ql add2" data-act="pickLinks" data-p="${p.id}">${ic((p.links||[]).length?'pen':'link')}${(p.links||[]).length?'Edit Links':'Add Links'}</button></div>
   <section class="panel" style="${cvar(p)}"><h2>Progress</h2><div class="body">${track(p,true)}</div></section>
   <div class="board" data-p="${p.id}" style="${cvar(p)}">
    ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col${s===cur?' cur':''}" data-s="${s.id}"><header><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="Stage name">${s===cur?'<span class="tag">In Progress</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="Delete stage ${esc(s.name)}">${ic('x')}</button></header>
@@ -511,7 +542,7 @@ function clean(h){h=h||'';if(!/<(br|div|b|i|u|s|mark|h[234]|span|p|strike|strong
     const hl=c.className==='hl'||/background(-color)?:/i.test(c.getAttribute('style')||'')&&!/transparent|rgba\(0, 0, 0, 0\)/.test(c.getAttribute('style'));
     [...c.attributes].forEach(a=>c.removeAttribute(a.name));if(hl)c.className='hl'})})(d.body);
   return d.body.innerHTML}
-function rteBar(){return `<div class="rtebar" role="toolbar" aria-label="Formatting">${[['bold','<b>B</b>','Bold'],['italic','<i>I</i>','Italic'],['underline','<u>U</u>','Underline'],['strikeThrough','<s>S</s>','Strikethrough'],['hl','<span class="hl">A</span>','Highlight'],['H2','H2','Heading 2'],['H3','H3','Heading 3'],['H4','H4','Heading 4']].map(([c,l,t])=>`<button type="button" data-cmd="${c}" title="${t}" aria-label="${t}">${l}</button>`).join('')}</div>`}
+function rteBar(){return `<div class="rtebar" role="toolbar" aria-label="Formatting">${[['bold','<b>B</b>','Bold'],['italic','<i>I</i>','Italic'],['underline','<u>U</u>','Underline'],['strikeThrough','<s>S</s>','Strikethrough'],['hl','<span class="hl">A</span>','Highlight'],['H2','H1','Heading 1'],['H3','H2','Heading 2'],['H4','H3','Heading 3']].map(([c,l,t])=>`<button type="button" data-cmd="${c}" title="${t}" aria-label="${t}">${l}</button>`).join('')}</div>`}
 function findTask(p){for(const st of p.stages){const t=st.todos.find(x=>x.id===SEL);if(t)return {s:st,t}}return null}
 function taskPanel(p){const f=SEL&&findTask(p);
   if(!f)return `<section class="panel tpanel none" id="tp"><h2>Task</h2>${emptyBox('pen','No task selected')}</section>`;
@@ -525,7 +556,7 @@ function setSel(id,p){if(SEL===id)return;SEL=id;document.querySelectorAll('.todo
 
 function viewLinks(){const groups={};S.links.forEach(l=>(groups[l.group||'Ungrouped']=groups[l.group||'Ungrouped']||[]).push(l));
   return `<header class="mast"><div><h1>Bookmarks</h1></div><button class="btn" data-act="newLink">${ic('plus')}New Bookmark</button></header>
-  ${S.links.length?Object.keys(groups).map(g=>`<section class="panel"><h2>${esc(g)} <small>${groups[g].length}</small></h2><div class="grid">${groups[g].map(linkRow).join('')}</div></section>`).join('')
+  ${S.links.length?Object.keys(groups).map(g=>`<section class="panel"><h2>${esc(g)} <span class="gh"><small>${groups[g].length}</small><button class="x addg" data-act="newLink" data-g="${esc(g)}" aria-label="Add to ${esc(g)}" title="Add to ${esc(g)}">${ic('plus')}</button></span></h2><div class="grid">${groups[g].map(linkRow).join('')}</div></section>`).join('')
    :`<section class="panel">${emptyBox('bookmark','No bookmarks')}</section>`}`}
 
 function scriptCode(tok){return `const TOKEN = '${(tok||'在這裡填同步密碼').replace(/['\\\\]/g,'')}';
@@ -568,9 +599,7 @@ function viewSettings(){
    <div class="acts2"><button class="btn" data-act="saveSync">Save &amp; Sync</button>${CFG.url?'<button class="btn ghost" data-act="offSync">Turn Off</button>':''}</div></div>
   </section>
   <section class="panel settings"><h2>Backup</h2><div class="body">
-   <div class="acts2"><button class="btn ghost" data-act="export">Export</button><label class="btn ghost" style="cursor:pointer">Import<input type="file" id="imp" accept="application/json,.json" hidden></label></div></div></section>
-  <section class="panel settings"><h2>Reset</h2><div class="body">
-   <div><button class="btn ghost" data-act="clearAll">Clear All Data</button></div></div></section>`}
+   <div class="acts2"><button class="btn ghost" data-act="export">Export</button><label class="btn ghost" style="cursor:pointer">Import<input type="file" id="imp" accept="application/json,.json" hidden></label></div></div></section>`}
 
 function render(){const r=route();renderSide();
   $('#main').innerHTML=r.v==='project'?viewProject(P(r.id)):r.v==='links'?viewLinks():r.v==='settings'?viewSettings():viewHome();
@@ -605,16 +634,21 @@ function projectForm(p){const e=!!p;
     const v={name:f.elements.name.value.trim(),desc:f.elements.desc.value.trim(),link,icon:f.elements.icon.value||(e?p.icon:'star'),color:+f.elements.color.value};
     if(e){Object.assign(p,v);save();render();toast('Saved')}
     else{const np=Object.assign({id:uid(),notes:'',stages:TEMPLATES[f.elements.tpl.value].map(n=>({id:uid(),name:n,todos:[]}))},v);S.projects.push(np);save();go('p/'+np.id);render();toast('Created')}})}
-function linkForm(l){const e=!!l,groups=[...new Set(S.links.map(x=>x.group).filter(Boolean))];
+function pickLinks(p){const on=new Set(p.links||[]);
+  modal('Quick Links',`<div class="lab">Up to 4 bookmarks</div><div class="lpick">${S.links.map(l=>`<label><input type="checkbox" name="ql" value="${l.id}"${on.has(l.id)?' checked':''}><span class="av"${lstyle(l)}>${esc(mark(l))}</span><span class="tt">${esc(l.title)}</span><small>${esc(l.group||'')}</small></label>`).join('')||'<p>No bookmarks</p>'}</div>`,'Save',f=>{
+    const v=[...f.querySelectorAll('[name=ql]:checked')].map(x=>x.value);if(v.length>4){toast('Up to 4 links','bad');return false}
+    p.links=v;save();render();toast('Saved')})}
+function linkForm(l,g0){const e=!!l,groups=[...new Set(S.links.map(x=>x.group).filter(Boolean))],recent=[...new Set(S.links.map(x=>x.group).filter(Boolean).reverse())].slice(0,3),lc=e&&l.color!=null?l.color:-1;
   modal(e?'Edit Bookmark':'New Bookmark',`
    <div class="fld"><label for="lu">URL</label><input class="in" id="lu" name="url" value="${esc(e?l.url:'')}" placeholder="https://" inputmode="url"><span class="msg"></span></div>
    <div class="fld"><label for="lt">Name</label><input class="in" id="lt" name="title" value="${esc(e?l.title:'')}" maxlength="30"><span class="msg"></span></div>
    <div class="fld"><label for="lm">Label</label><input class="in" id="lm" name="mark" value="${esc(e?l.mark||'':'')}" maxlength="2"><span class="msg"></span></div>
-   <div class="fld"><label for="lg">Group</label><input class="in" id="lg" name="group" value="${esc(e?l.group:'')}" list="lgs" maxlength="20"><datalist id="lgs">${groups.map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>`,
+   <div><div class="lab">Color</div><div class="pick"><label><input type="radio" name="color" value="-1"${lc<0?' checked':''}><span class="c none" title="Default"></span></label>${COLORS.map((c,i)=>`<label><input type="radio" name="color" value="${i}"${lc===i?' checked':''}><span class="c" style="--c:${c[0]}" title="Color ${i+1}"></span></label>`).join('')}</div></div>
+   <div class="fld"><label for="lg">Group</label>${recent.length?`<div class="gchips">${recent.map(g=>`<button type="button" class="gchip" data-act="grp" data-g="${esc(g)}">${esc(g)}</button>`).join('')}</div>`:''}<input class="in" id="lg" name="group" value="${esc(e?l.group:(g0||''))}" list="lgs" maxlength="20"><datalist id="lgs">${groups.map(g=>`<option value="${esc(g)}">`).join('')}</datalist></div>`,
    e?'Save':'Add',f=>{if(!need(f,'url','URL is required'))return false;
     let url=f.elements.url.value.trim();if(!/^https?:\/\//i.test(url))url='https://'+url;
     try{new URL(url)}catch(err){const w=f.elements.url.closest('.fld');w.classList.add('err');w.querySelector('.msg').textContent='Invalid URL';return false}
-    const v={url,title:f.elements.title.value.trim()||host(url),mark:f.elements.mark.value.trim(),group:f.elements.group.value.trim()||'Ungrouped'};
+    const v={url,title:f.elements.title.value.trim()||host(url),mark:f.elements.mark.value.trim(),color:+f.elements.color.value,group:f.elements.group.value.trim()||'Ungrouped'};
     if(e)Object.assign(l,v);else S.links.push(Object.assign({id:uid()},v));save();render();toast(e?'Saved':'Added')})}
 function confirmBox(title,text,ok,fn){modal(title,`<p>${esc(text)}</p>`,ok,()=>{fn()},true)}
 
@@ -640,13 +674,15 @@ document.addEventListener('click',e=>{
       case 'closeTask':{const r=route();setSel(null,P(r.id));return}
       case 'editProject':projectForm(p);return
       case 'newProject':projectForm();return
-      case 'newLink':linkForm();return
+      case 'pickLinks':pickLinks(p);return
+      case 'newLink':linkForm(null,d.g);return
+      case 'grp':{const f=a.form||a.closest('form');f.elements.group.value=d.g;return}
       case 'pinLink':{e.preventDefault();const l=S.links.find(x=>x.id===d.id);l.pin=!l.pin;save();render();return}
-      case 'rail':{const o=document.documentElement.dataset.rail==='open'?'':'open';document.documentElement.dataset.rail=o;try{localStorage.setItem('dash-rail',o)}catch(err){}return}
+      case 'projFold':PF=!PF;try{localStorage.setItem('dash-pf',PF?'1':'')}catch(err){}renderSide();return
+      case 'rail':{const o=document.documentElement.dataset.rail==='closed'?'':'closed';document.documentElement.dataset.rail=o;try{localStorage.setItem('dash-rail',o)}catch(err){}return}
       case 'editLink':e.preventDefault();linkForm(S.links.find(x=>x.id===d.id));return
       case 'theme':document.documentElement.dataset.theme=d.v;try{localStorage.setItem('dash-theme',d.v)}catch(err){}render();return
       case 'delLink':e.preventDefault();S.links=S.links.filter(x=>x.id!==d.id);save();render();toast('Bookmark removed',null,snap);return
-      case 'clearAll':confirmBox('Clear all data?','All projects, tasks, notes and bookmarks will be deleted.','Clear',()=>{S.projects=[];S.links=[];save();render();toast('Cleared',null,snap)});return
       case 'export':{const u=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));const l=document.createElement('a');l.href=u;l.download='my-dashboard-backup.json';l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('Backup exported');return}
       case 'copyScript':{const t=scriptCode($('#tok').value.trim());const ok=()=>toast('Copied');try{navigator.clipboard.writeText(t).then(ok,()=>toast('Copy failed','bad'))}catch(err){toast('Copy failed','bad')}return}
       case 'saveSync':{const url=$('#url').value.trim(),tok=$('#tok').value.trim(),w=$('#f-url');
@@ -658,6 +694,7 @@ document.addEventListener('click',e=>{
   if(g){if(e.target.closest('a.row'))return;go(g.dataset.go)}
 });
 document.addEventListener('change',e=>{const i=e.target,d=i.dataset;
+  if(i.name==='ql'&&i.checked&&i.form&&i.form.querySelectorAll('[name=ql]:checked').length>4){i.checked=false;toast('Up to 4 links','bad');return}
   if(i.id==='imp'&&i.files[0]){const fr=new FileReader();fr.onload=()=>{try{const j=JSON.parse(fr.result);if(!Array.isArray(j.projects)||!Array.isArray(j.links))throw 0;const snap=JSON.stringify(S);j.projects.forEach(p=>{if(!p.icon)p.icon='star'});S=j;save();render();toast('Imported',null,snap)}catch(err){toast('Not a valid backup file','bad')}};fr.readAsText(i.files[0]);return}
   if(i.id==='homeN'){S.homeLinks=+i.value;save();return}
   if(!d.f)return;const p=P(d.p);if(!p)return;const s=d.s&&p.stages.find(x=>x.id===d.s);
@@ -692,6 +729,7 @@ function dragStart(){const {kind,el,board}=PD;clearTimeout(PD.timer);PD=null;
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();try{getSelection().removeAllRanges()}catch(e){}
   DG={kind,el,board};el.classList.add('dragging');document.body.classList.add('drag')}
 document.addEventListener('pointerdown',e=>{if(e.button>0||DG)return;const t=e.target;
+  const sp=t.closest('.side .pn[data-go]');if(sp&&!document.documentElement.matches('[data-theme=meadow]')){PD={kind:'proj',el:sp,board:sp.parentNode,x:e.clientX,y:e.clientY,touch:e.pointerType==='touch'};if(PD.touch)PD.timer=setTimeout(()=>{if(PD)dragStart()},380);return}
   if(t.closest('button,.add')||t===document.activeElement&&t.matches('input.inl'))return;
   const todo=t.closest('.board .todo'),head=t.closest('.board .col>header');if(!todo&&!head)return;
   PD={kind:todo?'todo':'col',el:todo||head.parentNode,board:t.closest('.board'),x:e.clientX,y:e.clientY,touch:e.pointerType==='touch'};
@@ -702,6 +740,8 @@ document.addEventListener('touchmove',e=>{if(DG)e.preventDefault()},{passive:fal
 document.addEventListener('contextmenu',e=>{if(DG)e.preventDefault()});
 document.addEventListener('click',e=>{if(swallow){e.preventDefault();e.stopPropagation();swallow=false}},true);
 document.addEventListener('pointermove',e=>{if(!DG)return;const {kind,el,board}=DG;
+  if(kind==='proj'){const ps=[...board.querySelectorAll('.pn[data-go]')].filter(x=>x!==el);const bf=ps.find(x=>{const r=x.getBoundingClientRect();return e.clientY<r.top+r.height/2});
+    const ref=bf||board.querySelector('.pn[data-act=newProject]');if(el.nextElementSibling!==ref)board.insertBefore(el,ref);return}
   const br=board.getBoundingClientRect();if(e.clientX>br.right-50)board.scrollLeft+=14;else if(e.clientX<br.left+50)board.scrollLeft-=14;
   const cols=[...board.querySelectorAll('.col')];
   const col=cols.find(c=>{const r=c.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right});
@@ -710,7 +750,9 @@ document.addEventListener('pointermove',e=>{if(!DG)return;const {kind,el,board}=
   const ts=[...col.querySelectorAll('.todo')].filter(t=>t!==el);
   const before=ts.find(t=>{const r=t.getBoundingClientRect();return e.clientY<r.top+r.height/2});
   const ref=before||add;if(el.nextElementSibling!==ref||el.parentNode!==col)col.insertBefore(el,ref)});
-function dragEnd(){if(PD){clearTimeout(PD.timer);PD=null}if(!DG)return;swallow=true;setTimeout(()=>swallow=false,0);const {el,board}=DG;DG=null;el.classList.remove('dragging');document.body.classList.remove('drag');
+function dragEnd(){if(PD){clearTimeout(PD.timer);PD=null}if(!DG)return;swallow=true;setTimeout(()=>swallow=false,0);const {el,board,kind}=DG;DG=null;el.classList.remove('dragging');document.body.classList.remove('drag');
+  if(kind==='proj'){const ids=[...board.querySelectorAll('.pn[data-go]')].map(x=>x.dataset.go.slice(2));const np=ids.map(id=>P(id)).filter(Boolean);
+    if(np.length===S.projects.length&&np.some((x,i)=>x!==S.projects[i])){S.projects=np;save()}render();return}
   const p=S.projects.find(x=>x.id===board.dataset.p);if(!p){render();return}
   const all={};p.stages.forEach(s=>s.todos.forEach(t=>all[t.id]=t));const sm={};p.stages.forEach(s=>sm[s.id]=s);
   const before=JSON.stringify(p.stages.map(s=>[s.id,s.todos.map(t=>t.id)]));
