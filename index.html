@@ -147,10 +147,7 @@ button.pill:hover,a.pill:hover{background:var(--field);border-color:var(--faint)
 .col{flex:0 0 290px;padding:12px;display:flex;flex-direction:column;gap:8px;scroll-snap-align:start;background:var(--soft);border-radius:12px;border:1.5px solid transparent}
 .col.cur{border-color:var(--c);background:#fff}
 .col header{display:flex;gap:6px;align-items:center}
-.grip{flex:none;width:18px;height:26px;display:grid;place-items:center;color:var(--faint);cursor:grab;touch-action:none;border-radius:5px;transition:color var(--dur),background var(--dur)}
-.grip .ic{width:14px;height:14px}
-.grip:hover{color:var(--on);background:var(--field)}
-.todo .grip{margin-right:-4px}
+.board .todo,.board .col>header{-webkit-touch-callout:none}
 .dragging{opacity:.45;outline:2px dashed var(--c,var(--accent));outline-offset:-2px}
 body.drag,body.drag *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
 body.drag .board{scroll-snap-type:none}
@@ -160,7 +157,7 @@ body.drag .board{scroll-snap-type:none}
 .col header .inl{font-weight:var(--hw);font-size:15px}
 .cnt{font-size:12.5px;font-weight:800;color:var(--on-mute);font-variant-numeric:tabular-nums;white-space:nowrap}
 .tag{font-size:11.5px;font-weight:var(--hw);padding:1px 8px;border-radius:99px;background:var(--cs);color:var(--c);white-space:nowrap}
-.todo{display:flex;gap:8px;align-items:center;padding:7px 6px 7px 4px;border:1px solid var(--line);border-radius:8px}
+.todo{display:flex;gap:8px;align-items:center;padding:7px 6px 7px 10px;border:1px solid var(--line);border-radius:8px}
 .todo .inl{font-size:14.5px;font-weight:600}
 .todo.done .inl{color:var(--faint);text-decoration:line-through}
 .add{border:1.5px dashed #C9CAD3;background:none;border-radius:8px;padding:8px 12px;width:100%;transition:border-color var(--dur),background var(--dur)}
@@ -477,8 +474,8 @@ function viewProject(p){const st=pstat(p),cur=curStage(p);
     ${ring(p,st)}</header>
   <section class="panel" style="${cvar(p)}"><h2>Progress</h2><div class="body">${track(p,true)}</div></section>
   <div class="board" data-p="${p.id}" style="${cvar(p)}">
-   ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col${s===cur?' cur':''}" data-s="${s.id}"><header><span class="grip" data-drag="col" aria-hidden="true">${ic('grip')}</span><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="Stage name">${s===cur?'<span class="tag">In Progress</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="Delete stage ${esc(s.name)}">${ic('x')}</button></header>
-     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}" data-t="${t.id}"><span class="grip" data-drag="todo" aria-hidden="true">${ic('grip')}</span><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Complete"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Task"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Delete ${esc(t.text)}">${ic('x')}</button></div>`).join('')}
+   ${p.stages.map(s=>{const d=s.todos.filter(x=>x.done).length;return `<section class="col${s===cur?' cur':''}" data-s="${s.id}"><header><input class="inl" value="${esc(s.name)}" data-f="stageName" data-p="${p.id}" data-s="${s.id}" aria-label="Stage name">${s===cur?'<span class="tag">In Progress</span>':''}<span class="cnt">${d}/${s.todos.length}</span><button class="x" data-act="delStage" data-p="${p.id}" data-s="${s.id}" aria-label="Delete stage ${esc(s.name)}">${ic('x')}</button></header>
+     ${s.todos.map(t=>`<div class="todo solid${t.done?' done':''}" data-t="${t.id}"><input type="checkbox" class="ck" ${t.done?'checked':''} data-act="toggle" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Complete"><input class="inl" value="${esc(t.text)}" data-f="todoText" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Task"><button class="x" data-act="delTodo" data-p="${p.id}" data-s="${s.id}" data-t="${t.id}" aria-label="Delete ${esc(t.text)}">${ic('x')}</button></div>`).join('')}
      <input class="add" placeholder="Add task" data-add="${s.id}" data-p="${p.id}" aria-label="Add task to ${esc(s.name)}"></section>`}).join('')}
    <button class="newcol" data-act="addStage" data-p="${p.id}">${ic('plus')}New Stage</button></div>
   <section class="panel" style="${cvar(p)}"><h2>Notes</h2><textarea class="note" data-f="notes" data-p="${p.id}" aria-label="Notes">${esc(p.notes||'')}</textarea></section>
@@ -633,22 +630,30 @@ async function pull(loud){if(!CFG.url)return;setSync('busy');
     else{setSync('ok');if(loud){render();toast('Synced')}}
   }catch(e){setSync('bad');if(loud){render();toast(e.message==='unauthorized'?'Passphrase mismatch':'Cannot reach sync URL','bad')}}}
 /* 拖曳排序：階段左右換位，待辦上下移動（可跨階段） */
-let DG=null;
-document.addEventListener('pointerdown',e=>{const g=e.target.closest('.grip');if(!g||e.button>0)return;
-  const kind=g.dataset.drag,el=g.closest(kind==='col'?'.col':'.todo'),board=g.closest('.board');if(!el||!board)return;
-  e.preventDefault();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
-  DG={kind,el,board};el.classList.add('dragging');document.body.classList.add('drag')});
+let DG=null,PD=null,swallow=false;
+function dragStart(){const {kind,el,board}=PD;clearTimeout(PD.timer);PD=null;
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();try{getSelection().removeAllRanges()}catch(e){}
+  DG={kind,el,board};el.classList.add('dragging');document.body.classList.add('drag')}
+document.addEventListener('pointerdown',e=>{if(e.button>0||DG)return;const t=e.target;
+  if(t.closest('button,.add')||t===document.activeElement&&t.matches('input.inl'))return;
+  const todo=t.closest('.board .todo'),head=t.closest('.board .col>header');if(!todo&&!head)return;
+  PD={kind:todo?'todo':'col',el:todo||head.parentNode,board:t.closest('.board'),x:e.clientX,y:e.clientY,touch:e.pointerType==='touch'};
+  if(PD.touch)PD.timer=setTimeout(()=>{if(PD){dragStart();if(navigator.vibrate)navigator.vibrate(10)}},380)});
+document.addEventListener('pointermove',e=>{if(!PD)return;const far=Math.hypot(e.clientX-PD.x,e.clientY-PD.y)>6;
+  if(!far)return;if(PD.touch){clearTimeout(PD.timer);PD=null}else dragStart()},true);
+document.addEventListener('touchmove',e=>{if(DG)e.preventDefault()},{passive:false});
+document.addEventListener('contextmenu',e=>{if(DG)e.preventDefault()});
+document.addEventListener('click',e=>{if(swallow){e.preventDefault();e.stopPropagation();swallow=false}},true);
 document.addEventListener('pointermove',e=>{if(!DG)return;const {kind,el,board}=DG;
   const br=board.getBoundingClientRect();if(e.clientX>br.right-50)board.scrollLeft+=14;else if(e.clientX<br.left+50)board.scrollLeft-=14;
   const cols=[...board.querySelectorAll('.col')];
   const col=cols.find(c=>{const r=c.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right});
-  if(kind==='col'){if(!col||col===el)return;const r=col.getBoundingClientRect();
-    const after=e.clientX>r.left+r.width/2;const ref=after?col.nextElementSibling:col;if(ref!==el&&el.nextElementSibling!==ref)board.insertBefore(el,ref);return}
+  if(kind==='col'){if(!col||col===el)return;const after=cols.indexOf(col)>cols.indexOf(el);board.insertBefore(el,after?col.nextElementSibling:col);return}
   if(!col)return;const add=col.querySelector('.add');
   const ts=[...col.querySelectorAll('.todo')].filter(t=>t!==el);
   const before=ts.find(t=>{const r=t.getBoundingClientRect();return e.clientY<r.top+r.height/2});
   const ref=before||add;if(el.nextElementSibling!==ref||el.parentNode!==col)col.insertBefore(el,ref)});
-function dragEnd(){if(!DG)return;const {el,board}=DG;DG=null;el.classList.remove('dragging');document.body.classList.remove('drag');
+function dragEnd(){if(PD){clearTimeout(PD.timer);PD=null}if(!DG)return;swallow=true;setTimeout(()=>swallow=false,0);const {el,board}=DG;DG=null;el.classList.remove('dragging');document.body.classList.remove('drag');
   const p=S.projects.find(x=>x.id===board.dataset.p);if(!p){render();return}
   const all={};p.stages.forEach(s=>s.todos.forEach(t=>all[t.id]=t));const sm={};p.stages.forEach(s=>sm[s.id]=s);
   const before=JSON.stringify(p.stages.map(s=>[s.id,s.todos.map(t=>t.id)]));
